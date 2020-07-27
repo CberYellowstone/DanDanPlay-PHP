@@ -32,14 +32,12 @@ function isExists($test_path,$isOutPut=FALSE){
             echo $test_path.": dir</br>";
         }
         return TRUE;
-    }
-    elseif(file_exists($test_path)){
+    }elseif(file_exists($test_path)){
         if($isOutPut){
             echo $test_path.": file</br>";
         }
         return TRUE;
-    }
-    elseif(!is_dir($test_path) || !file_exists($test_path)){
+    }elseif(!is_dir($test_path) || !file_exists($test_path)){
         if($isOutPut){
             echo $test_path.": not exists</br>";
         }
@@ -141,14 +139,44 @@ function getFileMD5($file_path){
     return (hash_file('md5',$file_path));
 }
 
-function getVedioTime($file_path){
+function getVedioTime($file_path,$isOutSecond=FALSE){
     $file_path = formatSpace($file_path);
     $vedio_time = exec ("ffmpeg -i ".$file_path." 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//");// 总长度
     $vedio_time = explode(':',explode('.',$vedio_time)[0]);
     $vedio_time = $vedio_time[1].":".$vedio_time[2];
+    if($isOutSecond){
+        $vedio_time = explode(':',$vedio_time);
+        $vedio_time = $vedio_time[0]*60 + $vedio_time[1];
+    }
     $vedio_create_time = date ("Y-m-d H:i:s",filectime ($file_path));// 创建时间
     return array($vedio_time,$vedio_create_time);
     }
+
+
+function getVedioInformation($file_path){
+    $file_name = getFileName($file_path);
+    $file_hash = getFileMD5($file_path);
+    $file_size = filesize($file_path);
+    $vedio_duration = getVedioTime($file_path,TRUE)[0];
+    $match_mode = 'hashAndFileName';
+    $post_result = exec("curl -X POST --header 'Content-Type: text/xml' --header 'Accept: text/json' -d '<?xml version=\"1.0\"?> <MatchRequest> <fileName>".$file_name."</fileName> <fileHash>".$file_hash."</fileHash> <fileSize>".$file_size."</fileSize> <videoDuration>".$vedio_duration."</videoDuration> <matchMode>".$match_mode."</matchMode> </MatchRequest>' 'https://api.acplay.net/api/v2/match'");
+    preg_match_all('/\"episodeId\":(.*?),/', $post_result, $episodeId_matches);
+    $episodeId_list = $episodeId_matches[1];
+    $episodeId_first = $episodeId_list[0];
+    preg_match_all('/\"animeId\":(.*?),/', $post_result, $animeId_matches);
+    $animeId_list = $animeId_matches[1];
+    $animeId_first = $animeId_list[0];
+    preg_match_all('/\"animeTitle\":(.*?),/', $post_result, $animeTitle_matches);
+    $animeTitle_list = $animeTitle_matches[1];
+    $animeTitle_first = $animeTitle_list[0];
+    preg_match_all('/\"episodeTitle\":(.*?),/', $post_result, $episodeTitle_matches);
+    $episodeTitle_list = $episodeTitle_matches[1];
+    $episodeTitle_first = $episodeTitle_list[0];
+    //echo ($post_result);
+    return array($post_result,array($episodeId_first,$animeId_first,$animeTitle_first,$episodeTitle_first));
+}
+
+$path_fot_test = "/mnt/usb/[KxIX]Shuumatsu Nani Shitemasuka Isogashii Desuka Sukutte Moratte Ii Desuka[GB][1080P]/[KxIX]Shuumatsu Nani Shitemasuka Isogashii Desuka Sukutte Moratte Ii Desuka 12[GB][1080P].mp4";
 
 
 if($_GET['action']=='listRoot'){
@@ -158,13 +186,14 @@ elseif($_GET['action']=='mkpic'){
     mkpicForFolder(listRoot($vedio_root_path,FALSE)[0]);
 }
 elseif($_GET['action']=='getFileName'){
-    echo(getFileName('/mnt/usb/[KxIX]Shuumatsu\ Nani\ Shitemasuka\ Isogashii\ Desuka\ Sukutte\ Moratte\ Ii\ Desuka[GB][1080P]',TRUE));
+    echo(getFileName($path_fot_test,TRUE));
 }
 elseif($_GET['action']=='getVedioPic'){
     echo (getVedioPic(getFileName(listRoot($vedio_root_path,FALSE)[0],TRUE),countFolder(listRoot($vedio_root_path,FALSE)[0])[2][0],TRUE));
 }
 elseif($_GET['action']=='test'){
     echo ("这是一个测试接口!</br>");
+    print_r(getVedioInformation($path_fot_test)[1]);
     echo ("</br>输出结束!</br>");
 }
 
