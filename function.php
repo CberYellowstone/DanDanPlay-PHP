@@ -10,6 +10,22 @@ function isCil(){
     return preg_match("/cli/i", php_sapi_name()) ? 1 : 0;
 }
 
+function getFileSize($file_path){
+    $file_size = filesize($file_path);
+    $KB = 1024;$MB = 1024 * $KB;$GB = 1024 * $MB;$TB = 1024 * $GB;
+    if ($file_size < $KB) {
+        return $file_size."B";
+    } elseif ($file_size<$MB) {
+        return round($file_size/$KB,1)."KB";
+    } elseif ($file_size<$GB) {
+        return round($file_size/$MB,1)."MB";
+    } elseif ($file_size<$TB) {
+        return round($file_size/$GB,1)."GB";
+    } else {
+        return round($file_size/$TB,1)."TB";
+    }
+}
+
 function isExists($test_path,$isOutPut=FALSE){
     if(is_dir($test_path)){
         if($isOutPut){
@@ -106,7 +122,7 @@ function mkpicForFolder($mkpic_folder){
             mkdir(iconv("UTF-8", "GBK", ($save_path."/".$folder_name."/".$vedio_name)),0777,true); 
         }       
         //$vedio_name = formatSpace($vedio_name);
-        mkpic($mkpic_vedio,292,($save_path."/".$folder_name."/".$vedio_name."/".$vedio_name.".jpg"),'400*225');
+        mkpic($mkpic_vedio,289,($save_path."/".$folder_name."/".$vedio_name."/".$vedio_name.".jpg"),'400*225');
     }
 }
 
@@ -120,20 +136,19 @@ function getVedioPic($folder_name,$vedio_name,$auto_mk=FALSE){
     return ("./".getFileName($GLOBALS['data_path'],TRUE)."/".md5($folder_name)."/".$vedio_name_md5."/".$vedio_name_md5.".jpg</br>");
 }
 
-function getFileSize($file_path){
-    return filesize($file_path);
-}
-
+//带路径
 function getFileMD5($file_path){
     return (hash_file('md5',$file_path));
 }
 
-
-
-
-
-
-
+function getVedioTime($file_path){
+    $file_path = formatSpace($file_path);
+    $vedio_time = exec ("ffmpeg -i ".$file_path." 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//");// 总长度
+    $vedio_time = explode(':',explode('.',$vedio_time)[0]);
+    $vedio_time = $vedio_time[1].":".$vedio_time[2];
+    $vedio_create_time = date ("Y-m-d H:i:s",filectime ($file_path));// 创建时间
+    return array($vedio_time,$vedio_create_time);
+    }
 
 
 if($_GET['action']=='listRoot'){
