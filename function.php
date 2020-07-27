@@ -25,6 +25,7 @@ function isExists($test_path){
     }
 }
 
+//$root带路径
 function listRoot($root,$isOutPut=TRUE){
     $root_list = array();
     $all_in_root = scandir($root);
@@ -42,8 +43,10 @@ function listRoot($root,$isOutPut=TRUE){
         }
     }
     return $root_list;
+    //$root_list内容包含路径
 }
 
+//$folder带路径
 function countFolder($folder){
     $all_in_folder = scandir($folder);
     $count_in_folder = 0;
@@ -73,6 +76,7 @@ function formatSpace($need_format_str){
     return str_replace(" ","\ ",$need_format_str);
 }
 
+//$vedio_file,$pic_name均为为完整带路径文件名
 function mkpic($vedio_file,$vedio_time,$pic_name,$pic_size) {
     if (empty ($vedio_time))$vedio_time = '1';// 默认截取第一秒第一帧
     $vedio_file = formatSpace($vedio_file);
@@ -80,7 +84,7 @@ function mkpic($vedio_file,$vedio_time,$pic_name,$pic_size) {
     //echo($mkpic_command."</br>");
     if(!isExists($pic_name)){
         //echo ($mkpic_command."</br>");
-        system($mkpic_command);
+        //system($mkpic_command);
     }
 }
 
@@ -109,8 +113,18 @@ function getVedioPic($folder_name,$vedio_name,$auto_mk=FALSE){
 }
 
 function getFileSize($file_path){
-    echo filesize($file_path);
+    return filesize($file_path);
 }
+
+function getFileMD5($file_path){
+    return (hash_file('md5',$file_path));
+}
+
+
+
+
+
+
 
 
 
@@ -118,7 +132,8 @@ if($_GET['action']=='listRoot'){
     listRoot($vedio_root_path);
 }
 elseif($_GET['action']=='mkpic'){
-    mkpicForFolder(listRoot($vedio_root_path,FALSE)[0]);
+    //mkpicForFolder(listRoot($vedio_root_path,FALSE)[0]);
+    echo(listRoot($vedio_root_path,FALSE)[0]);
 }
 elseif($_GET['action']=='getFileName'){
     echo(getFileName('/mnt/usb/[KxIX]Shuumatsu\ Nani\ Shitemasuka\ Isogashii\ Desuka\ Sukutte\ Moratte\ Ii\ Desuka[GB][1080P]',TRUE));
@@ -127,7 +142,9 @@ elseif($_GET['action']=='getVedioPic'){
     echo (getVedioPic(getFileName(listRoot($vedio_root_path,FALSE)[0],TRUE),countFolder(listRoot($vedio_root_path,FALSE)[0])[2][0],TRUE));
 }
 elseif($_GET['action']=='test'){
-    echo ("这是一个测试接口!");
+    echo ("这是一个测试接口!</br>");
+    echo (hash_file('md5',"/mnt/usb/[KxIX]Shuumatsu Nani Shitemasuka Isogashii Desuka Sukutte Moratte Ii Desuka[GB][1080P]/[KxIX]Shuumatsu Nani Shitemasuka Isogashii Desuka Sukutte Moratte Ii Desuka 04[GB][1080P].mp4"));
+    echo ("</br>输出结束!</br>");
 }
 
 
