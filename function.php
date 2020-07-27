@@ -10,17 +10,23 @@ function isCil(){
     return preg_match("/cli/i", php_sapi_name()) ? 1 : 0;
 }
 
-function isExists($test_path){
+function isExists($test_path,$isOutPut=FALSE){
     if(is_dir($test_path)){
-        echo $test_path.": dir</br>";
+        if($isOutPut){
+            echo $test_path.": dir</br>";
+        }
         return TRUE;
     }
     elseif(file_exists($test_path)){
-        echo $test_path.": file</br>";
+        if($isOutPut){
+            echo $test_path.": file</br>";
+        }
         return TRUE;
     }
     elseif(!is_dir($test_path) || !file_exists($test_path)){
-        echo $test_path.": not exists</br>";
+        if($isOutPut){
+            echo $test_path.": not exists</br>";
+        }
         return FALSE;
     }
 }
@@ -84,10 +90,11 @@ function mkpic($vedio_file,$vedio_time,$pic_name,$pic_size) {
     //echo($mkpic_command."</br>");
     if(!isExists($pic_name)){
         //echo ($mkpic_command."</br>");
-        //system($mkpic_command);
+        system($mkpic_command);
     }
 }
 
+//$mkpic_folder带路径
 function mkpicForFolder($mkpic_folder){
     $save_path=$GLOBALS['data_path'];
     //echo ($save_path."</br>");
@@ -99,10 +106,11 @@ function mkpicForFolder($mkpic_folder){
             mkdir(iconv("UTF-8", "GBK", ($save_path."/".$folder_name."/".$vedio_name)),0777,true); 
         }       
         //$vedio_name = formatSpace($vedio_name);
-        mkpic($mkpic_vedio,290,($save_path."/".$folder_name."/".$vedio_name."/".$vedio_name.".jpg"),'400*225');
+        mkpic($mkpic_vedio,292,($save_path."/".$folder_name."/".$vedio_name."/".$vedio_name.".jpg"),'400*225');
     }
 }
 
+//均不带路径
 function getVedioPic($folder_name,$vedio_name,$auto_mk=FALSE){
     $vedio_name_md5 = md5(getFileName($vedio_name));
     $mkpic_pic_path = $GLOBALS['data_path']."/".md5($folder_name)."/".$vedio_name_md5."/".$vedio_name_md5.".jpg";
@@ -132,8 +140,7 @@ if($_GET['action']=='listRoot'){
     listRoot($vedio_root_path);
 }
 elseif($_GET['action']=='mkpic'){
-    //mkpicForFolder(listRoot($vedio_root_path,FALSE)[0]);
-    echo(listRoot($vedio_root_path,FALSE)[0]);
+    mkpicForFolder(listRoot($vedio_root_path,FALSE)[0]);
 }
 elseif($_GET['action']=='getFileName'){
     echo(getFileName('/mnt/usb/[KxIX]Shuumatsu\ Nani\ Shitemasuka\ Isogashii\ Desuka\ Sukutte\ Moratte\ Ii\ Desuka[GB][1080P]',TRUE));
@@ -143,7 +150,6 @@ elseif($_GET['action']=='getVedioPic'){
 }
 elseif($_GET['action']=='test'){
     echo ("这是一个测试接口!</br>");
-    echo (hash_file('md5',"/mnt/usb/[KxIX]Shuumatsu Nani Shitemasuka Isogashii Desuka Sukutte Moratte Ii Desuka[GB][1080P]/[KxIX]Shuumatsu Nani Shitemasuka Isogashii Desuka Sukutte Moratte Ii Desuka 04[GB][1080P].mp4"));
     echo ("</br>输出结束!</br>");
 }
 
