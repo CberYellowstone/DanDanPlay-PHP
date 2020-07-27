@@ -4,6 +4,8 @@
 
 用于服务器部署
 
+用到了DanDanPlay API
+
 弹弹play每次更新时会附带此项目中master分支最新版的html/js/css和图片文件。
 
 ## 文件说明
