@@ -8,6 +8,9 @@
 
 弹弹play每次更新时会附带此项目中master分支最新版的html/js/css和图片文件。
 
+## DEMO
+* [个人demo](https://apps.ystone.top:488/ddp/)(暂时只做到主页面)
+
 ## 文件说明
 
 * 待补充

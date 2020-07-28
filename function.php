@@ -134,7 +134,7 @@ function getVedioPic($file_path,$auto_mk=FALSE){
     if(!isExists($GLOBALS['data_path']."/".md5($folder_name)."/".$vedio_name_md5."/".$vedio_name_md5.".jpg") && $auto_mk){
         mkpic($GLOBALS['vedio_root_path']."/".$folder_name."/".getFileName($file_path),290,$mkpic_pic_path,'400*225');
     }
-    return ("./".getFileName($GLOBALS['data_path'],TRUE)."/".md5($folder_name)."/".$vedio_name_md5."/".$vedio_name_md5.".jpg</br>");
+    return ("./".getFileName($GLOBALS['data_path'],TRUE)."/".md5($folder_name)."/".$vedio_name_md5."/".$vedio_name_md5.".jpg");
 }
 
 //带路径
@@ -216,7 +216,19 @@ function readVedioInformation($file_path,$auto_get=FALSE){
     return array($vedio_information_list,$vedio_information_json);
 }
 
-
+function mkCardForFolder($folder_path){
+    foreach(countFolder($folder_path)[1] as $each_vedio_path){
+        $vedio_pic_link = getVedioPic($each_vedio_path,TRUE);
+        $vedio_file_name = getFileName($each_vedio_path);
+        $vedio_file_size = getFileSize($each_vedio_path);
+        $vedio_time = getVedioTime($each_vedio_path)[0];
+        $vedio_information_list = readVedioInformation($each_vedio_path,TRUE)[0];
+        //print_r($vedio_information_list);
+        $animeTitle = $vedio_information_list['animeTitle'];
+        $episodeTitle = $vedio_information_list['episodeTitle'];
+        echo ('<div class="col-sm-6 col-md-4 float-left pt-4"><div class="card"><a href="/web/@Current.Id"><img class="card-img-top" src="'.$vedio_pic_link.'" alt="Card image cap"></a><div class="card-body"><h5 class="card-title line-limit-length"><a href="/index.html?animeId=@Current.AnimeId">'.$animeTitle.'</a></h5><h5 class="card-title" style="overflow: hidden; white-space: nowrap;text-overflow: ellipsis"></h5><p class="video-text line-limit-length"><a href="/web/@Current.Id">'.$episodeTitle.'</a><br>'.$vedio_file_name.'<br>时长：'.$vedio_time.'<br>文件体积：'.$vedio_file_size.'<br>上次播放：@Current.LastPlay</p></div></div></div>');
+    }
+}
 
 
 $path_fot_test = "/var/www/html/ddp/vedio/末日时在做什么？有没有空？可以来拯救吗？/[KxIX]Shuumatsu Nani Shitemasuka Isogashii Desuka Sukutte Moratte Ii Desuka 12[GB][1080P].mp4";
@@ -236,7 +248,7 @@ elseif($_GET['action']=='getVedioPic'){
 }
 elseif($_GET['action']=='test'){
     echo ("这是一个测试接口!</br>");
-    saveVedioInformationForFolder(listRoot($vedio_root_path,FALSE)[1]);
+    mkCardForFolder('/var/www/html/ddp/vedio/末日时在做什么？有没有空？可以来拯救吗？/');
     echo ("</br>输出结束!</br>");
 }
 

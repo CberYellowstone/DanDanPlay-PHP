@@ -88,35 +88,7 @@
 			</div>
 		</div>
 		<div class=" col-md-9 col-xs-12 float-left transform">
-			@If.ShowVideoList
-			@Each.VideoFiles
-			<div class="col-sm-6 col-md-4 float-left pt-4">
-				<div class="card">
-					<a href="/web/@Current.Id">
-						<img class="card-img-top" src="/image/@Current.Id" alt="Card image cap">
-					</a>
-					<div class="card-body">
-						<h5 class="card-title line-limit-length">
-							<a href="/index.html?animeId=@Current.AnimeId">@Current.AnimeTitle</a>
-						</h5>
-						<h5 class="card-title" style="overflow: hidden; white-space: nowrap;text-overflow: ellipsis"></h5>
-						<p class="video-text line-limit-length">
-							<a href="/web/@Current.Id">@Current.EpisodeTitle</a>
-							<br>
-							@Current.Name
-							<br>
-							时长：@Current.DurationText
-							<br>
-							文件体积：@Current.SizeText
-							<br>
-							上次播放：@Current.LastPlay
-						</p>
-					</div>
-				</div>
-			</div>
-			@EndEach
-			@EndIf
-
+		<?php include_once 'function.php';mkCardForFolder('/var/www/html/ddp/vedio/末日时在做什么？有没有空？可以来拯救吗？/');?>
 			<div class="col-12 float-right text-center pt-5">
 				<p>Yellowstone's Anime Site 由弹弹play"远程访问"工具提供支持. All rights reserved. 保留一切权利<br />@Model.ServerInfo</p>
 				<p></p>
