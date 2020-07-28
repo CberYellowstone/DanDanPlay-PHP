@@ -176,7 +176,35 @@ function getVedioInformation($file_path){
     return array($post_result,array($episodeId_first,$animeId_first,$animeTitle_first,$episodeTitle_first));
 }
 
-$path_fot_test = "/mnt/usb/[KxIX]Shuumatsu Nani Shitemasuka Isogashii Desuka Sukutte Moratte Ii Desuka[GB][1080P]/[KxIX]Shuumatsu Nani Shitemasuka Isogashii Desuka Sukutte Moratte Ii Desuka 12[GB][1080P].mp4";
+function saveVedioInformation($file_path){
+    $vedio_information_list = getVedioInformation($file_path)[1];
+    $vedio_information_list_named = array('episodeId' => $vedio_information_list[0], 'animeId' => $vedio_information_list[1], 'animeTitle' => $vedio_information_list[2], 'episodeTitle' => $vedio_information_list[3]);
+    $vedio_information_json = json_encode($vedio_information_list_named,JSON_UNESCAPED_UNICODE);
+    //echo ($vedio_information_json);
+    $folder_name = md5(getFileName(dirname($file_path,1)));
+    $file_name = md5(getFileName($file_path));
+    //echo ($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json');
+    if(!isExists($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name)){
+        mkdir(iconv("UTF-8", "GBK", ($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name)),0777,true); 
+    }       
+    file_put_contents($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json', $vedio_information_json);
+}
+
+function readVedioInformation($file_path){
+    $folder_name = md5(getFileName(dirname($file_path,1)));
+    $file_name = md5(getFileName($file_path));
+    $vedio_information_json = file_get_contents($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json');
+    $vedio_information_list = json_decode($vedio_information_json,TRUE);
+    return $vedio_information_list;
+}
+
+
+
+
+
+
+
+$path_fot_test = "/var/www/html/ddp/vedio/末日时在做什么？有没有空？可以来拯救吗？/[KxIX]Shuumatsu Nani Shitemasuka Isogashii Desuka Sukutte Moratte Ii Desuka 12[GB][1080P].mp4";
 
 
 if($_GET['action']=='listRoot'){
@@ -193,7 +221,7 @@ elseif($_GET['action']=='getVedioPic'){
 }
 elseif($_GET['action']=='test'){
     echo ("这是一个测试接口!</br>");
-    print_r(getVedioInformation($path_fot_test)[1]);
+    readVedioInformation($path_fot_test);
     echo ("</br>输出结束!</br>");
 }
 
