@@ -126,12 +126,13 @@ function mkpicForFolder($mkpic_folder){
     }
 }
 
-//均不带路径
-function getVedioPic($folder_name,$vedio_name,$auto_mk=FALSE){
-    $vedio_name_md5 = md5(getFileName($vedio_name));
+//带路径
+function getVedioPic($file_path,$auto_mk=FALSE){
+    $vedio_name_md5 = md5(getFileName($file_path));
+    $folder_name = getFileName(dirname($file_path,1),TRUE);
     $mkpic_pic_path = $GLOBALS['data_path']."/".md5($folder_name)."/".$vedio_name_md5."/".$vedio_name_md5.".jpg";
     if(!isExists($GLOBALS['data_path']."/".md5($folder_name)."/".$vedio_name_md5."/".$vedio_name_md5.".jpg") && $auto_mk){
-        mkpic($GLOBALS['vedio_root_path']."/".$folder_name."/".$vedio_name,290,$mkpic_pic_path,'400*225');
+        mkpic($GLOBALS['vedio_root_path']."/".$folder_name."/".getFileName($file_path),290,$mkpic_pic_path,'400*225');
     }
     return ("./".getFileName($GLOBALS['data_path'],TRUE)."/".md5($folder_name)."/".$vedio_name_md5."/".$vedio_name_md5.".jpg</br>");
 }
@@ -186,7 +187,7 @@ function saveVedioInformationForFolder($get_information_folder){
 
 
 function saveVedioInformation($file_path){
-    $folder_name = md5(getFileName(dirname($file_path,1)));
+    $folder_name = md5(getFileName(getFileName(dirname($file_path,1),TRUE)));
     $file_name = md5(getFileName($file_path));
     if(!isExists($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json')){
         $vedio_information_list = getVedioInformation($file_path)[1];
@@ -204,15 +205,16 @@ function saveVedioInformation($file_path){
     } 
 }
 
-function readVedioInformation($file_path){
-    $folder_name = md5(getFileName(dirname($file_path,1)));
+function readVedioInformation($file_path,$auto_get=FALSE){
+    $folder_name = md5(getFileName(getFileName(dirname($file_path,1),TRUE)));
     $file_name = md5(getFileName($file_path));
+    if(!isExists($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json')){
+        saveVedioInformation($file_path);
+    }
     $vedio_information_json = file_get_contents($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json');
     $vedio_information_list = json_decode($vedio_information_json,TRUE);
     return array($vedio_information_list,$vedio_information_json);
 }
-
-
 
 
 
@@ -224,17 +226,17 @@ if($_GET['action']=='listRoot'){
     listRoot($vedio_root_path);
 }
 elseif($_GET['action']=='mkpic'){
-    mkpicForFolder(listRoot($vedio_root_path,FALSE)[0]);
+    mkpicForFolder(listRoot($vedio_root_path,FALSE)[1]);
 }
-elseif($_GET['action']=='getFileName'){
+elseif($_GET['action']=='getFileName'){ 
     echo(getFileName($path_fot_test,TRUE));
 }
 elseif($_GET['action']=='getVedioPic'){
-    echo (getVedioPic(getFileName(listRoot($vedio_root_path,FALSE)[0],TRUE),countFolder(listRoot($vedio_root_path,FALSE)[0])[2][0],TRUE));
+    echo (getVedioPic($path_fot_test));
 }
 elseif($_GET['action']=='test'){
     echo ("这是一个测试接口!</br>");
-    saveVedioInformationForFolder(listRoot($vedio_root_path,FALSE)[0]);
+    saveVedioInformationForFolder(listRoot($vedio_root_path,FALSE)[1]);
     echo ("</br>输出结束!</br>");
 }
 
