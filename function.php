@@ -98,9 +98,11 @@ function formatSpace($need_format_str){
 
 //$vedio_file,$pic_name均为为完整带路径文件名
 function mkpic($vedio_file,$vedio_time,$pic_name,$pic_size) {
-    if (empty ($vedio_time))$vedio_time = '1';// 默认截取第一秒第一帧
     $vedio_file = formatSpace($vedio_file);
     $mkpic_command = "/usr/bin/ffmpeg -ss ".$vedio_time." -i ".$vedio_file." -y -f mjpeg -t 1 -s ".$pic_size." ".$pic_name;
+    if(!isExists(dirname($pic_name,1))){
+        mkdir(iconv("UTF-8", "GBK", (dirname($pic_name,1))),0777,true); 
+    }       
     //echo($mkpic_command."</br>");
     if(!isExists($pic_name)){
         //echo ($mkpic_command."</br>");
@@ -176,18 +178,30 @@ function getVedioInformation($file_path){
     return array($post_result,array($episodeId_first,$animeId_first,$animeTitle_first,$episodeTitle_first));
 }
 
+function saveVedioInformationForFolder($get_information_folder){
+    foreach((countFolder($get_information_folder)[1]) as $get_information_vedio){
+        saveVedioInformation($get_information_vedio);
+    }
+}
+
+
 function saveVedioInformation($file_path){
-    $vedio_information_list = getVedioInformation($file_path)[1];
-    $vedio_information_list_named = array('episodeId' => $vedio_information_list[0], 'animeId' => $vedio_information_list[1], 'animeTitle' => $vedio_information_list[2], 'episodeTitle' => $vedio_information_list[3]);
-    $vedio_information_json = json_encode($vedio_information_list_named,JSON_UNESCAPED_UNICODE);
-    //echo ($vedio_information_json);
     $folder_name = md5(getFileName(dirname($file_path,1)));
     $file_name = md5(getFileName($file_path));
-    //echo ($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json');
-    if(!isExists($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name)){
-        mkdir(iconv("UTF-8", "GBK", ($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name)),0777,true); 
-    }       
-    file_put_contents($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json', $vedio_information_json);
+    if(!isExists($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json')){
+        $vedio_information_list = getVedioInformation($file_path)[1];
+        $vedio_information_list_named = array('episodeId' => $vedio_information_list[0], 'animeId' => $vedio_information_list[1], 'animeTitle' => $vedio_information_list[2], 'episodeTitle' => $vedio_information_list[3]);
+        $vedio_information_json = json_encode($vedio_information_list_named,JSON_UNESCAPED_UNICODE);
+        //echo ($vedio_information_json);
+        //echo ($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json');
+        if(!isExists($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name)){
+            mkdir(iconv("UTF-8", "GBK", ($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name)),0777,true); 
+        }   
+        echo($vedio_information_json.'</br>');    
+        file_put_contents($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json', $vedio_information_json);    
+    }elseif(isExists($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json')){
+        echo (readVedioInformation($file_path)[1]).'</br>';
+    } 
 }
 
 function readVedioInformation($file_path){
@@ -195,9 +209,8 @@ function readVedioInformation($file_path){
     $file_name = md5(getFileName($file_path));
     $vedio_information_json = file_get_contents($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json');
     $vedio_information_list = json_decode($vedio_information_json,TRUE);
-    return $vedio_information_list;
+    return array($vedio_information_list,$vedio_information_json);
 }
-
 
 
 
@@ -221,7 +234,7 @@ elseif($_GET['action']=='getVedioPic'){
 }
 elseif($_GET['action']=='test'){
     echo ("这是一个测试接口!</br>");
-    readVedioInformation($path_fot_test);
+    saveVedioInformationForFolder(listRoot($vedio_root_path,FALSE)[0]);
     echo ("</br>输出结束!</br>");
 }
 
