@@ -1,6 +1,6 @@
 # dandanplay-libraryindex
 
-基于PHP重构的 弹弹play Windows/UWP客户端远程访问功能的html首页（媒体库内容的展示以及视频播放）
+基于PHP重构的 弹弹play远程访问首页（媒体库内容的展示以及视频播放）
 
 用于服务器部署
 
