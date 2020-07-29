@@ -4,12 +4,24 @@ global $data_path;
 $vedio_root_path=dirname(__FILE__).'/vedio';
 $data_path=dirname(__FILE__).'/data';
 
+$site_name = "Yellowstone's Anime Site";
+
 
 
 function isCil(){
     return preg_match("/cli/i", php_sapi_name()) ? 1 : 0;
 }
 
+function removeQuote($str) {
+    if (preg_match("/^\"/",$str)){
+        $str = substr($str, 1, strlen($str) - 1);
+    }
+    //判断字符串是否以'"'结束
+    if (preg_match("/\"$/",$str)){
+        $str = substr($str, 0, strlen($str) - 1);;
+    }
+    return $str;
+}
 function getFileSize($file_path){
     $file_size = filesize($file_path);
     $KB = 1024;$MB = 1024 * $KB;$GB = 1024 * $MB;$TB = 1024 * $GB;
@@ -169,13 +181,14 @@ function getVedioInformation($file_path){
     preg_match_all('/\"animeId\":(.*?),/', $post_result, $animeId_matches);
     $animeId_list = $animeId_matches[1];
     $animeId_first = $animeId_list[0];
-    preg_match_all('/\"animeTitle\":(.*?),/', $post_result, $animeTitle_matches);
+    preg_match_all('/\"animeTitle\":(.*?),\"/', $post_result, $animeTitle_matches);
     $animeTitle_list = $animeTitle_matches[1];
     $animeTitle_first = $animeTitle_list[0];
-    preg_match_all('/\"episodeTitle\":(.*?),/', $post_result, $episodeTitle_matches);
+    preg_match_all('/\"episodeTitle\":(.*?),\"/', $post_result, $episodeTitle_matches);
     $episodeTitle_list = $episodeTitle_matches[1];
     $episodeTitle_first = $episodeTitle_list[0];
     //echo ($post_result);
+    //print_r(array($episodeId_first,$animeId_first,$animeTitle_first,$episodeTitle_first));
     return array($post_result,array($episodeId_first,$animeId_first,$animeTitle_first,$episodeTitle_first));
 }
 
@@ -223,22 +236,28 @@ function mkCardForFolder($folder_path){
         $vedio_file_size = getFileSize($each_vedio_path);
         $vedio_time = getVedioTime($each_vedio_path)[0];
         $vedio_information_list = readVedioInformation($each_vedio_path,TRUE)[0];
-        //print_r($vedio_information_list);
-        $animeTitle = $vedio_information_list['animeTitle'];
-        $episodeTitle = $vedio_information_list['episodeTitle'];
-        echo ('<div class="col-sm-6 col-md-4 float-left pt-4"><div class="card"><a href="/web/@Current.Id"><img class="card-img-top" src="'.$vedio_pic_link.'" alt="Card image cap"></a><div class="card-body"><h5 class="card-title line-limit-length"><a href="/index.html?animeId=@Current.AnimeId">'.$animeTitle.'</a></h5><h5 class="card-title" style="overflow: hidden; white-space: nowrap;text-overflow: ellipsis"></h5><p class="video-text line-limit-length"><a href="/web/@Current.Id">'.$episodeTitle.'</a><br>'.$vedio_file_name.'<br>时长：'.$vedio_time.'<br>文件体积：'.$vedio_file_size.'<br>上次播放：@Current.LastPlay</p></div></div></div>');
+        //print_r(getVedioInformation($each_vedio_path)[1].'</br>');
+        $animeTitle = removeQuote($vedio_information_list['animeTitle']);
+        $episodeTitle = removeQuote($vedio_information_list['episodeTitle']);
+        //echo ($animeTitle."  ".$episodeTitle);
+        echo ('<div class="col-sm-6 col-md-4 float-left pt-4"><div class="card"><a href="./index.php?'.$animeTitle.'"><img class="card-img-top" src="'.$vedio_pic_link.'" alt="Card image cap"></a><div class="card-body"><h5 class="card-title line-limit-length"><a href="/index.html?animeId=@Current.AnimeId">'.$animeTitle.'</a></h5><h5 class="card-title" style="overflow: hidden; white-space: nowrap;text-overflow: ellipsis"></h5><p class="video-text line-limit-length"><a href="/web/@Current.Id">'.$episodeTitle.'</a><br>'.$vedio_file_name.'<br>时长：'.$vedio_time.'<br>文件体积：'.$vedio_file_size.'<br>上次播放：@Current.LastPlay</p></div></div></div>');
     }
 }
 
+function mkCardForRoot($root){
+    foreach(listRoot($root,FALSE) as $each_in_root_mix){
+        mkCardForFolder($each_in_root_mix);
+    }
+}
 
-$path_fot_test = "/var/www/html/ddp/vedio/末日时在做什么？有没有空？可以来拯救吗？/[KxIX]Shuumatsu Nani Shitemasuka Isogashii Desuka Sukutte Moratte Ii Desuka 12[GB][1080P].mp4";
+$path_fot_test = "/var/www/html/ddp/vedio/末日时在做什么？有没有空？可以来拯救吗？/[KxIX]Shuumatsu Nani Shitemasuka Isogashii Desuka Sukutte Moratte Ii Desuka 11[GB][1080P].mp4";
 
 
 if($_GET['action']=='listRoot'){
     listRoot($vedio_root_path);
 }
 elseif($_GET['action']=='mkpic'){
-    mkpicForFolder(listRoot($vedio_root_path,FALSE)[1]);
+    mkpicForFolder(listRoot($vedio_root_path,FALSE)[0]);
 }
 elseif($_GET['action']=='getFileName'){ 
     echo(getFileName($path_fot_test,TRUE));
@@ -248,7 +267,7 @@ elseif($_GET['action']=='getVedioPic'){
 }
 elseif($_GET['action']=='test'){
     echo ("这是一个测试接口!</br>");
-    mkCardForFolder('/var/www/html/ddp/vedio/末日时在做什么？有没有空？可以来拯救吗？/');
+    saveVedioInformationForFolder('/var/www/html/ddp/vedio/末日时在做什么？有没有空？可以来拯救吗？');
     echo ("</br>输出结束!</br>");
 }
 
