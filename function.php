@@ -157,7 +157,7 @@ function getFileMD5($file_path){
 
 function echoServerInformation(){
     date_default_timezone_set("Asia/Shanghai");
-    echo "软件版本：".$GLOBALS['version']." | 服务器PHP版本：".PHP_VERSION." | 当前服务器时间: ".date('Y/m/d H:i:s', time());
+    echo "DanDanPlay-PHP版本：".$GLOBALS['version']." | 服务器PHP版本：".PHP_VERSION." | 当前服务器时间: ".date('Y/m/d H:i:s', time());
 }
 
 function getVedioTime($file_path,$isOutSecond=FALSE){
