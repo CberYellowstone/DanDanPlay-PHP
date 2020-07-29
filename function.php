@@ -1,11 +1,12 @@
 <?php  
 global $vedio_root_path;
 global $data_path;
+global $version;
 $vedio_root_path=dirname(__FILE__).'/vedio';
 $data_path=dirname(__FILE__).'/data';
 
 $site_name = "Yellowstone's Anime Site";
-
+$version = "Alpha 0.0.1";
 
 
 function isCil(){
@@ -154,6 +155,11 @@ function getFileMD5($file_path){
     return (hash_file('md5',$file_path));
 }
 
+function echoServerInformation(){
+    date_default_timezone_set("Asia/Shanghai");
+    echo "软件版本：".$GLOBALS['version']." | 服务器PHP版本：".PHP_VERSION." | 当前服务器时间: ".date('Y/m/d H:i:s', time());
+}
+
 function getVedioTime($file_path,$isOutSecond=FALSE){
     $file_path = formatSpace($file_path);
     $vedio_time = exec ("ffmpeg -i ".$file_path." 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//");// 总长度
@@ -267,7 +273,7 @@ elseif($_GET['action']=='getVedioPic'){
 }
 elseif($_GET['action']=='test'){
     echo ("这是一个测试接口!</br>");
-    saveVedioInformationForFolder('/var/www/html/ddp/vedio/末日时在做什么？有没有空？可以来拯救吗？');
+    mkCardForRoot($vedio_root_path);
     echo ("</br>输出结束!</br>");
 }
 
