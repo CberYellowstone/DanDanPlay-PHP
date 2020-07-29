@@ -8,8 +8,14 @@
 
 弹弹play每次更新时会附带此项目中master分支最新版的html/js/css和图片文件。
 
+## 多平台
+
+* [GitHub](https://github.com/CberYellowstone/DanDanPlay-PHP)
+* [Gitee](https://gitee.com/Yellowstone/DanDanPlay-PHP)
+* [腾讯工蜂](https://git.code.tencent.com/Yellowstone/DanDanPlay-PHP)
+
 ## DEMO
-* [个人demo](https://apps.ystone.top:488/ddp/)(暂时只做到主页面)
+[个人demo](https://apps.ystone.top:488/ddp/)(暂时只做到主页面)
 
 ## 文件说明
 
