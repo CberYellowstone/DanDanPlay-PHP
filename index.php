@@ -64,7 +64,7 @@
 					</li>
 					@EndIf -->
 					<li class="nav-item">
-						<a class="nav-link" href="@Model.AboutLink" target="_blank">关于</a>
+						<a class="nav-link" href="<?php include_once 'function.php';echo ($About_link); ?>" target="_blank">关于</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="https://github.com/kaedei/dandanplay-libraryindex" target="_blank">帮助改进此页面</a>
@@ -83,12 +83,12 @@
 		<div class="col-md-3 col-xs-12 float-left nobords">
 			<div class="list-group  li">
 				<a href="" class="list-group-item list-group-item-action active rounded-0 line-limit-length">作品列表</a>
-				<?php include_once 'function.php';listRoot($video_root_path,TRUE); ?>
+				<?php include_once 'function.php';listRoot($video_root_path,TRUE,$_GET['animeName']);?>
 				<a href="./" class="list-group-item list-group-item-action active rounded-0 line-limit-length">返回首页</a>
 			</div>
 		</div>
 		<div class=" col-md-9 col-xs-12 float-left transform">
-		<?php include_once 'function.php';mkCardForRoot($video_root_path,TRUE);?>
+		<?php include_once 'function.php';mkCardForRoot($video_root_path,$_GET['animeName']);?>
 			<div class="col-12 float-right text-center pt-5">
 				<p><?php include_once 'function.php';echo ($site_name); ?> 由 弹弹play 提供部分支持.<br /><?php include_once 'function.php'; echoServerInformation()?></p>
 				<p></p>

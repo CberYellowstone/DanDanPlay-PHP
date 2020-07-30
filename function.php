@@ -9,7 +9,7 @@ $site_name = "Yellowstone's Anime Site";
 $version = "Alpha 0.0.1";
 $DanmakuArea = "83%";
 $DanmakuDurationCss = "danmaku 9s linear";
-
+$About_link = "https://github.com/CberYellowstone/DanDanPlay-PHP";
 
 function isCil(){
     return preg_match("/cli/i", php_sapi_name()) ? 1 : 0;
@@ -61,7 +61,7 @@ function isExists($test_path,$isOutPut=FALSE){
 }
 
 //$root带路径
-function listRoot($root,$isOutPut=TRUE){
+function listRoot($root,$isOutPut=TRUE,$point=''){
     $root_list = array();
     $all_in_root = scandir($root);
     foreach($all_in_root as $each_in_root){
@@ -73,10 +73,16 @@ function listRoot($root,$isOutPut=TRUE){
             $each_folder_count = countFolder($each_in_root_mix)[0];
             $root_list[] = $each_in_root_mix;
             if($isOutPut){
-                echo ("<a href=\"./index.php?animeName=$each_in_root\" class=\"list-group-item list-group-item-action rounded-0 line-limit-length\"><span class=\"badge badge-primary\">$each_folder_count</span> $each_in_root</a>");
+                if(!$point){//这里写得不好,有点耗资源了,先这样吧,就一点点而已
+                    echo ("<a href=\"./index.php?animeName=".$each_in_root."\" class=\"list-group-item list-group-item-action rounded-0 line-limit-length\"><span class=\"badge badge-primary\">".$each_folder_count."</span> ".$each_in_root."</a>");
+                }
+                }
             }
         }
-    }
+        if($_GET['animeName'] && $isOutPut) {
+            $count_point = countFolder($root.'/'.$point)[0];
+            echo ("<a href=\"./index.php?animeName=".$point."\" class=\"list-group-item list-group-item-action rounded-0 line-limit-length\"><span class=\"badge badge-primary\">".$count_point."</span> ".$point."</a>");
+        }
     return $root_list;
     //$root_list内容包含路径
 }
@@ -219,7 +225,7 @@ function saveVideoInformation($file_path,$Force_make=FALSE){
         if(!isExists($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name)){
             mkdir(iconv("UTF-8", "GBK", ($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name)),0777,true); 
         }   
-        echo($video_information_json.'</br>');    
+        //echo($video_information_json.'</br>');    
         file_put_contents($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json', $video_information_json);    
     }elseif(isExists($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json')){
         //echo (readVideoInformation($file_path)[1]).'</br>';
@@ -239,6 +245,14 @@ function readVideoInformation($file_path,$auto_get=FALSE){
     return array($video_information_list,$video_information_json);
 }
 
+function readVideoInformationFromMD5($md5){
+    $parent_md5 = explode("-",$md5)[0];
+    $video_md5 = explode("-",$md5)[1];
+    $video_information_json = file_get_contents($GLOBALS['data_path'].'/'.$parent_md5.'/'.$video_md5.'/'.$video_md5.'.json');
+    $video_information_list = json_decode($video_information_json,TRUE);
+    return array($video_information_list,$video_information_json);
+}
+
 function mkCardForFolder($folder_path){
     foreach(countFolder($folder_path)[1] as $each_video_path){
         $video_pic_link = getvideoPic($each_video_path,TRUE);
@@ -249,14 +263,21 @@ function mkCardForFolder($folder_path){
         //print_r(getVideoInformation($each_video_path)[1].'</br>');
         $animeTitle = removeQuote($video_information_list['animeTitle']);
         $episodeTitle = removeQuote($video_information_list['episodeTitle']);
-        //echo ($animeTitle."  ".$episodeTitle);
-        echo ('<div class="col-sm-6 col-md-4 float-left pt-4"><div class="card"><a href="/web/@Current.Id"><img class="card-img-top" src="'.$video_pic_link.'" alt="Card image cap"></a><div class="card-body"><h5 class="card-title line-limit-length"><a href="./index.php?'.$animeTitle.'">'.$animeTitle.'</a></h5><h5 class="card-title" style="overflow: hidden; white-space: nowrap;text-overflow: ellipsis"></h5><p class="video-text line-limit-length"><a href="/web/@Current.Id">'.$episodeTitle.'</a><br>'.$video_file_name.'<br>时长：'.$video_time.'<br>文件体积：'.$video_file_size.'<br>上次播放：@Current.LastPlay</p></div></div></div>');
+        $video_path = $video_information_list['file_path'];
+        $video_parent_path_md5 = md5(getFileName(dirname($video_path),TRUE));
+        $video_file_md5 = md5(getFileName($video_path));
+        //echo ($video_file_md5."</br>");
+        echo ('<div class="col-sm-6 col-md-4 float-left pt-4"><div class="card"><a href="./video.php?video='.$video_parent_path_md5."-".$video_file_md5.'"><img class="card-img-top" src="'.$video_pic_link.'" alt="Card image cap"></a><div class="card-body"><h5 class="card-title line-limit-length"><a href="./index.php?animeName='.$animeTitle.'">'.$animeTitle.'</a></h5><h5 class="card-title" style="overflow: hidden; white-space: nowrap;text-overflow: ellipsis"></h5><p class="video-text line-limit-length"><a href="./video.php?video='.$video_parent_path_md5."-".$video_file_md5.'">'.$episodeTitle.'</a><br>'.$video_file_name.'<br>时长：'.$video_time.'<br>文件体积：'.$video_file_size.'<br>上次播放：@Current.LastPlay</p></div></div></div>');
     }
 }
 
-function mkCardForRoot($root){
-    foreach(listRoot($root,FALSE) as $each_in_root_mix){
-        mkCardForFolder($each_in_root_mix);
+function mkCardForRoot($root,$point=""){
+    if(!$point){
+        foreach(listRoot($root,FALSE) as $each_in_root_mix){
+            mkCardForFolder($each_in_root_mix);
+        }    
+    } else {
+        mkCardForFolder($root.'/'.$point);
     }
 }
 
@@ -276,11 +297,12 @@ elseif($_GET['action']=='getvideoPic'){
     echo (getvideoPic($path_fot_test));
 }
 elseif($_GET['action']=='saveVideoInformation'){
-    saveVideoInformationForFolder(listRoot($video_root_path,FALSE)[0],$Force_make=FALSE);
+    saveVideoInformationForFolder(listRoot($video_root_path,FALSE)[1],$Force_make=TRUE);
 }
 elseif($_GET['action']=='test'){
     echo ("这是一个测试接口!</br>");
-    mkCardForRoot($video_root_path);
+    //mkCardForRoot($video_root_path);
+    readVideoInformationFromMD5("3443dab0dcee781a18e927eb92a50740-b91988b81a6f12fb1389af69ab707bde");
     echo ("</br>输出结束!</br>");
 }
 

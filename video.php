@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>@Model.AnimeTitle - @Model.EpisodeTitle - <?php include_once 'function.php';echo ($site_name); ?></title>
+	<title><?php include_once 'function.php';echo (removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['animeTitle'])." - ".removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['episodeTitle'])." - ".$site_name); ?></title>
 	<link rel="shortcut icon" href="./css/icon.png" type="image/x-icon">
 	<link href="./css/bootstrap-4.0.0.css" rel="stylesheet">
 	<link rel="stylesheet" href="./css/DPlayer.min.css">
@@ -69,7 +69,7 @@
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item active">
-						<a class="nav-link" href="./index.html">首页</a>
+						<a class="nav-link" href="./index.php">首页</a>
 					</li>
 					<!-- @IfNot.IsAnonymous
 					<li class="nav-item dropdown">
@@ -82,7 +82,7 @@
 					</li>
 					@EndIf -->
 					<li class="nav-item">
-						<a class="nav-link" href="@Model.AboutLink" target="_blank">关于</a>
+						<a class="nav-link" href="<?php include_once 'function.php';echo ($About_link); ?>" target="_blank">关于</a>
 					</li>
 
 					<li class="nav-item">
@@ -97,13 +97,13 @@
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item">
-					<a href="./index.html">首页</a>
+					<a href="./index.php">首页</a>
 				</li>
 				<li class="breadcrumb-item">
-					<a href="./index.html?animeId=@Model.AnimeId">@Model.AnimeTitle</a>
+					<a href="./index.php?animeId=@Model.AnimeId"><?php include_once 'function.php';echo (removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['animeTitle'])); ?></a>
 				</li>
 				<li class="breadcrumb-item active" aria-current="page">
-					@Model.EpisodeTitle
+				<?php include_once 'function.php';echo (removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['episodeTitle'])); ?>
 				</li>
 			</ol>
 		</nav>
@@ -121,7 +121,7 @@
 				@If.IsCurrent
 				active
 				@EndIf
-			   ">
+			    ">
 						@Current.EpisodeTitle
 						<small>
 							@Current.FileName
