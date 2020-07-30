@@ -4,11 +4,11 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>@Model.AnimeTitle - @Model.EpisodeTitle - @Model.WebSiteName</title>
-	<link rel="shortcut icon" href="/css/icon.png" type="image/x-icon">
-	<link href="/css/bootstrap-4.0.0.css" rel="stylesheet">
-	<link rel="stylesheet" href="/css/DPlayer.min.css">
-	<script src="/js/DPlayer.min.js"></script>
+	<title>@Model.AnimeTitle - @Model.EpisodeTitle - <?php include_once 'function.php';echo ($site_name); ?></title>
+	<link rel="shortcut icon" href="./css/icon.png" type="image/x-icon">
+	<link href="./css/bootstrap-4.0.0.css" rel="stylesheet">
+	<link rel="stylesheet" href="./css/DPlayer.min.css">
+	<script src="./js/DPlayer.min.js"></script>
 	<style type="text/css">
 		/* ReSharper disable InvalidValue */
 		/* ReSharper disable CssNotResolved */
@@ -21,19 +21,19 @@
 
 		.dplayer-danmaku {
 			font-size: 25px;
-			height: @Model.DanmakuArea ;
+			height: <?php include_once 'function.php';echo ($DanmakuArea); ?> ;
 		}
 
 			.dplayer-danmaku .dplayer-danmaku-right.dplayer-danmaku-move {
-				-webkit-animation: @Model.DanmakuDurationCss ;
-				animation: @Model.DanmakuDurationCss ;
+				-webkit-animation: <?php include_once 'function.php';echo ($DanmakuDurationCss); ?> ;
+				animation: <?php include_once 'function.php';echo ($DanmakuDurationCss); ?> ;
 				-webkit-animation-play-state: paused;
 				animation-play-state: paused;
 			}
 
 			.dplayer-danmaku .dplayer-danmaku-item {
 				-webkit-text-stroke: 0.1px black;
-				text-stroke: 0.1px black;
+				/* text-stroke: 0.1px black; 兼容性问题*/
 				text-shadow: 1.0px 1.0px 0.5px rgba(0, 0, 0, .5);
 			}
 
@@ -62,25 +62,25 @@
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container">
-			<a class="navbar-brand" href="#">@Model.WebSiteName</a>
+			<a class="navbar-brand" href="#"><?php include_once 'function.php';echo ($site_name); ?></a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item active">
-						<a class="nav-link" href="/index.html">首页</a>
+						<a class="nav-link" href="./index.html">首页</a>
 					</li>
-					@IfNot.IsAnonymous
+					<!-- @IfNot.IsAnonymous
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							@@Model.UserName
 						</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-							<a class="dropdown-item" href="/logout">注销登录</a>
+							<a class="dropdown-item" href="./logout">注销登录</a>
 						</div>
 					</li>
-					@EndIf
+					@EndIf -->
 					<li class="nav-item">
 						<a class="nav-link" href="@Model.AboutLink" target="_blank">关于</a>
 					</li>
@@ -97,10 +97,10 @@
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item">
-					<a href="/index.html">首页</a>
+					<a href="./index.html">首页</a>
 				</li>
 				<li class="breadcrumb-item">
-					<a href="/index.html?animeId=@Model.AnimeId">@Model.AnimeTitle</a>
+					<a href="./index.html?animeId=@Model.AnimeId">@Model.AnimeTitle</a>
 				</li>
 				<li class="breadcrumb-item active" aria-current="page">
 					@Model.EpisodeTitle
@@ -117,7 +117,7 @@
 			<div class="card-body">
 				<div class="list-group list-group-flush">
 					@Each.VideoFiles
-					<a href="/web/@Current.Id" class="list-group-item list-group-item-action
+					<a href="./web/@Current.Id" class="list-group-item list-group-item-action
 				@If.IsCurrent
 				active
 				@EndIf
@@ -137,14 +137,14 @@
 	<div class="container">
 		<div class="row text-center">
 			<div class="col-12">
-				<p>@Model.WebSiteName 由弹弹play"远程访问"工具提供支持. All rights reserved. 保留一切权利</p>
+				<p><?php include_once 'function.php';echo ($site_name); ?> 由 弹弹play 提供部分支持.</p>
 			</div>
 		</div>
 	</div>
 
-	<script src="/js/jquery-3.2.1.min.js"></script>
-	<!--<script src="/js/popper.min.js"></script>-->
-	<script src="/js/bootstrap-4.0.0.js"></script>
+	<script src="./js/jquery-3.2.1.min.js"></script>
+	<!--<script src="./js/popper.min.js"></script>-->
+	<script src="./js/bootstrap-4.0.0.js"></script>
 	<script>
 		$(document).ready(function () {
 			var dp = new DPlayer({

@@ -7,6 +7,8 @@ $data_path=dirname(__FILE__).'/data';
 
 $site_name = "Yellowstone's Anime Site";
 $version = "Alpha 0.0.1";
+$DanmakuArea = "83%";
+$DanmakuDurationCss = "danmaku 9s linear";
 
 
 function isCil(){
@@ -174,7 +176,7 @@ function getvideoTime($file_path,$isOutSecond=FALSE){
     }
 
 
-function getvideoInformation($file_path){
+function getVideoInformation($file_path){
     $file_name = getFileName($file_path);
     $file_hash = getFileMD5($file_path);
     $file_size = filesize($file_path);
@@ -198,19 +200,19 @@ function getvideoInformation($file_path){
     return array($post_result,array($episodeId_first,$animeId_first,$animeTitle_first,$episodeTitle_first));
 }
 
-function savevideoInformationForFolder($get_information_folder){
+function saveVideoInformationForFolder($get_information_folder,$Force_make=FALSE){
     foreach((countFolder($get_information_folder)[1]) as $get_information_video){
-        savevideoInformation($get_information_video);
+        saveVideoInformation($get_information_video,$Force_make);
     }
 }
 
 
-function savevideoInformation($file_path){
+function saveVideoInformation($file_path,$Force_make=FALSE){
     $folder_name = md5(getFileName(getFileName(dirname($file_path,1),TRUE)));
     $file_name = md5(getFileName($file_path));
-    if(!isExists($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json')){
-        $video_information_list = getvideoInformation($file_path)[1];
-        $video_information_list_named = array('episodeId' => $video_information_list[0], 'animeId' => $video_information_list[1], 'animeTitle' => $video_information_list[2], 'episodeTitle' => $video_information_list[3]);
+    if(!isExists($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json') or $Force_make){
+        $video_information_list = getVideoInformation($file_path)[1];
+        $video_information_list_named = array('episodeId' => $video_information_list[0], 'animeId' => $video_information_list[1], 'animeTitle' => $video_information_list[2], 'episodeTitle' => $video_information_list[3], 'file_path' => $file_path);
         $video_information_json = json_encode($video_information_list_named,JSON_UNESCAPED_UNICODE);
         //echo ($video_information_json);
         //echo ($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json');
@@ -220,15 +222,17 @@ function savevideoInformation($file_path){
         echo($video_information_json.'</br>');    
         file_put_contents($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json', $video_information_json);    
     }elseif(isExists($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json')){
-        echo (readvideoInformation($file_path)[1]).'</br>';
+        //echo (readVideoInformation($file_path)[1]).'</br>';
+        //print_r(readVideoInformation($file_path)[0]['file_path']);
+        //echo ("</br>");
     } 
 }
 
-function readvideoInformation($file_path,$auto_get=FALSE){
+function readVideoInformation($file_path,$auto_get=FALSE){
     $folder_name = md5(getFileName(getFileName(dirname($file_path,1),TRUE)));
     $file_name = md5(getFileName($file_path));
     if(!isExists($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json')){
-        savevideoInformation($file_path);
+        saveVideoInformation($file_path);
     }
     $video_information_json = file_get_contents($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json');
     $video_information_list = json_decode($video_information_json,TRUE);
@@ -241,8 +245,8 @@ function mkCardForFolder($folder_path){
         $video_file_name = getFileName($each_video_path);
         $video_file_size = getFileSize($each_video_path);
         $video_time = getvideoTime($each_video_path)[0];
-        $video_information_list = readvideoInformation($each_video_path,TRUE)[0];
-        //print_r(getvideoInformation($each_video_path)[1].'</br>');
+        $video_information_list = readVideoInformation($each_video_path,TRUE)[0];
+        //print_r(getVideoInformation($each_video_path)[1].'</br>');
         $animeTitle = removeQuote($video_information_list['animeTitle']);
         $episodeTitle = removeQuote($video_information_list['episodeTitle']);
         //echo ($animeTitle."  ".$episodeTitle);
@@ -270,6 +274,9 @@ elseif($_GET['action']=='getFileName'){
 }
 elseif($_GET['action']=='getvideoPic'){
     echo (getvideoPic($path_fot_test));
+}
+elseif($_GET['action']=='saveVideoInformation'){
+    saveVideoInformationForFolder(listRoot($video_root_path,FALSE)[0],$Force_make=FALSE);
 }
 elseif($_GET['action']=='test'){
     echo ("这是一个测试接口!</br>");
