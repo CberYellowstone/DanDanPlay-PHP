@@ -83,12 +83,12 @@
 		<div class="col-md-3 col-xs-12 float-left nobords">
 			<div class="list-group  li">
 				<a href="" class="list-group-item list-group-item-action active rounded-0 line-limit-length">作品列表</a>
-				<?php include_once 'function.php';listRoot($vedio_root_path,TRUE); ?>
+				<?php include_once 'function.php';listRoot($video_root_path,TRUE); ?>
 				<a href="./" class="list-group-item list-group-item-action active rounded-0 line-limit-length">返回首页</a>
 			</div>
 		</div>
 		<div class=" col-md-9 col-xs-12 float-left transform">
-		<?php include_once 'function.php';mkCardForRoot($vedio_root_path,TRUE);?>
+		<?php include_once 'function.php';mkCardForRoot($video_root_path,TRUE);?>
 			<div class="col-12 float-right text-center pt-5">
 				<p><?php include_once 'function.php';echo ($site_name); ?> 由弹弹play API提供部分支持. All rights reserved. 保留一切权利<br /><?php include_once 'function.php'; echoServerInformation()?></p>
 				<p></p>
