@@ -109,14 +109,12 @@
 		</nav>
 
 		<div id="dplayer"></div>
-
 		<div class="card">
-			<div class="card-header">
-				剧集列表
-			</div>
+			<div class="card-header">剧集列表</div>
 			<div class="card-body">
 				<div class="list-group list-group-flush">
-					@Each.VideoFiles
+				<?php include_once 'function.php';mkListFromMD5($_GET['video']); ?>
+					<!-- @Each.VideoFiles
 					<a href="./web/@Current.Id" class="list-group-item list-group-item-action
 				@If.IsCurrent
 				active
@@ -127,7 +125,7 @@
 							@Current.FileName
 						</small>
 					</a>
-					@EndEach
+					@EndEach -->
 				</div>
 			</div>
 		</div>
@@ -153,7 +151,7 @@
 				loop: false, //循环
 				screenshot: true, //截图
 				hotkey: true, //热键
-				preload: 'none', //预加载
+				preload: 'metadata', //预加载
 				//logo: 'http://www.dandanplay.com/logo.png',        //播放器左上角logo
 				volume: 1, //默认音量
 				mutex: true, //互斥，阻止多个播放器同时播放
@@ -166,8 +164,8 @@
 					id: '<?php include_once 'function.php';echo ($_GET['video']); ?>', //弹幕库id
 					api: './function.php?action=getCommentFromMD5&md5=', //弹幕库api
 					bottom: '15%', //底部距离
-					unlimited: true //无限制
-					//maximum: 60 //最大弹幕
+					unlimited: false, //无限制
+					maximum: 60 //最大弹幕
 				},
 				subtitle: {
 					url: '@Model.SubtitleVtt',

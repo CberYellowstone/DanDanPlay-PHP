@@ -278,7 +278,7 @@ function mkCardForFolder($folder_path){
         $video_parent_path_md5 = md5(getFileName(dirname($video_path),TRUE));
         $video_file_md5 = md5(getFileName($video_path));
         //echo ($video_file_md5."</br>");
-        echo ('<div class="col-sm-6 col-md-4 float-left pt-4"><div class="card"><a href="./video.php?video='.$video_parent_path_md5."-".$video_file_md5.'"><img class="card-img-top" src="'.$video_pic_link.'" alt="Card image cap"></a><div class="card-body"><h5 class="card-title line-limit-length"><a href="./index.php?animeName='.$animeTitle.'">'.$animeTitle.'</a></h5><h5 class="card-title" style="overflow: hidden; white-space: nowrap;text-overflow: ellipsis"></h5><p class="video-text line-limit-length"><a href="./video.php?video='.$video_parent_path_md5."-".$video_file_md5.'">'.$episodeTitle.'</a><br>'.$video_file_name.'<br>时长：'.$video_time.'<br>文件体积：'.$video_file_size.'<br>上次播放：@Current.LastPlay</p></div></div></div>');
+        echo ('<div class="col-sm-6 col-md-4 float-left pt-4"><div class="card"><a href="./video.php?video='.$video_parent_path_md5."-".$video_file_md5.'"><img class="card-img-top" src="'.$video_pic_link.'" alt="Card image cap"></a><div class="card-body"><h5 class="card-title line-limit-length"><a href="./index.php?animeName='.$animeTitle.'">'.$animeTitle.'</a></h5><h5 class="card-title" style="overflow: hidden; white-space: nowrap;text-overflow: ellipsis"></h5><p class="video-text line-limit-length"><a href="./video.php?video='.$video_parent_path_md5."-".$video_file_md5.'">'.$episodeTitle.'</a><br>'.$video_file_name.'<br>时长：'.$video_time.'<br>文件体积：'.$video_file_size.'<br>上次播放：暂未实现</p></div></div></div>');
     }
 }
 
@@ -336,31 +336,54 @@ function getCommentFromMD5($md5){
     echo($comment_test);
 }
 
+function mkList($folder_path,$now_path=""){
+    foreach(countFolder($folder_path)[1] as $each_path){
+        $video_name_all = getFileName($each_path,TRUE);
+        $episodeTitle = removeQuote(readVideoInformation($each_path)[0]['episodeTitle']);
+        $video_parent_path_md5 = md5($video_name_all);
+        $video_file_md5 = md5(getFileName($each_path));
+        $video_url = './video.php?video='.$video_parent_path_md5."-".$video_file_md5;
+        echo('<a href="'.$video_url.'" class="list-group-item list-group-item-action ');
+        if($now_path == $each_path){
+            echo('active');
+        }
+        echo('">'.$episodeTitle.'<small>'.$video_name_all.'</small></a>');
+    }
+}
+
+
+function mkListFromMD5($md5){
+    $video_now_path = readVideoInformationFromMD5($md5)[0]['file_path'];
+    $video_folder = dirname($video_now_path,1);
+    mkList($video_folder,$video_now_path);
+}
+
 
 $path_fot_test = "/var/www/html/ddp/video/末日时在做什么？有没有空？可以来拯救吗？/[KxIX]Shuumatsu Nani Shitemasuka Isogashii Desuka Sukutte Moratte Ii Desuka 11[GB][1080P].mp4";
 
 
 if($_GET['action']=='listRoot'){
-    listRoot($video_root_path);
+    //listRoot($video_root_path);
 }
 elseif($_GET['action']=='mkpic'){
-    mkpicForFolder(listRoot($video_root_path,FALSE)[0]);
+    //mkpicForFolder(listRoot($video_root_path,FALSE)[0]);
 }
 elseif($_GET['action']=='getFileName'){ 
-    echo(getFileName($path_fot_test,TRUE));
+    //echo(getFileName($path_fot_test,TRUE));
 }
 elseif($_GET['action']=='getVideoPic'){
-    echo (getVideoPic($path_fot_test));
+    //echo (getVideoPic($path_fot_test));
 }
 elseif($_GET['action']=='saveVideoInformation'){
-    saveVideoInformationForFolder(listRoot($video_root_path,FALSE)[0],FALSE);
+    //saveVideoInformationForFolder(listRoot($video_root_path,FALSE)[0],FALSE);
 }
 elseif($_GET['action']=='getCommentFromMD5'){
     getCommentFromMD5($_GET['md5']);
 }
 elseif($_GET['action']=='test'){
     echo ("这是一个测试接口!</br>");
-    //getCommentFromMD5('3443dab0dcee781a18e927eb92a50740-b41cd25ff644882b5636396df6075059');
+    //downloadCommentForFolder(listRoot($video_root_path,FALSE)[1]);
+    //mkListFromMD5('3443dab0dcee781a18e927eb92a50740-705f4e351422f9e020a34d871d076072');
     echo ("</br>输出结束!</br>");
 }
 
