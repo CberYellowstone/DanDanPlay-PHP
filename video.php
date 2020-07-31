@@ -100,7 +100,7 @@
 					<a href="./index.php">首页</a>
 				</li>
 				<li class="breadcrumb-item">
-					<a href="./index.php?animeId=@Model.AnimeId"><?php include_once 'function.php';echo (removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['animeTitle'])); ?></a>
+					<a href="./index.php?animeName=<?php include_once 'function.php';echo (removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['animeTitle'])); ?>"><?php include_once 'function.php';echo (removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['animeTitle'])); ?></a>
 				</li>
 				<li class="breadcrumb-item active" aria-current="page">
 				<?php include_once 'function.php';echo (removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['episodeTitle'])); ?>
@@ -158,13 +158,13 @@
 				volume: 1, //默认音量
 				mutex: true, //互斥，阻止多个播放器同时播放
 				video: {
-					url: '@Model.Video',
-					pic: '@Model.Image',
+					url: '<?php include_once 'function.php';echo (getVideoFileFromMD5($_GET['video'])); ?>',
+					pic: '<?php include_once 'function.php';echo (getVideoPicFromMD5($_GET['video'])); ?>',
 					type: 'auto'
 				},
 				danmaku: {
-					id: '@Model.Id', //弹幕库id
-					api: '/dplayer/', //弹幕库api
+					id: '<?php include_once 'function.php';echo ($_GET['video']); ?>', //弹幕库id
+					api: './function.php?action=getCommentFromMD5&md5=', //弹幕库api
 					bottom: '15%', //底部距离
 					unlimited: true //无限制
 					//maximum: 60 //最大弹幕

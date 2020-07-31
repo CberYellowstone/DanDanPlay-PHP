@@ -148,7 +148,7 @@ function mkpicForFolder($mkpic_folder){
 }
 
 //带路径
-function getvideoPic($file_path,$auto_mk=FALSE){
+function getVideoPic($file_path,$auto_mk=FALSE){
     $video_name_md5 = md5(getFileName($file_path));
     $folder_name = getFileName(dirname($file_path,1),TRUE);
     $mkpic_pic_path = $GLOBALS['data_path']."/".md5($folder_name)."/".$video_name_md5."/".$video_name_md5.".jpg";
@@ -156,6 +156,12 @@ function getvideoPic($file_path,$auto_mk=FALSE){
         mkpic($GLOBALS['video_root_path']."/".$folder_name."/".getFileName($file_path),290,$mkpic_pic_path,'400*225');
     }
     return ("./".getFileName($GLOBALS['data_path'],TRUE)."/".md5($folder_name)."/".$video_name_md5."/".$video_name_md5.".jpg");
+}
+
+function getVideoPicFromMD5($md5){
+    $parent_md5 = explode("-",$md5)[0];
+    $video_md5 = explode("-",$md5)[1];
+    return ('./'.getFileName($GLOBALS['data_path'],TRUE).'/'.$parent_md5.'/'.$video_md5.'/'.$video_md5.'.jpg');
 }
 
 //带路径
@@ -168,7 +174,7 @@ function echoServerInformation(){
     echo "DanDanPlay-PHP版本：".$GLOBALS['version']." | 服务器PHP版本：".PHP_VERSION." | 当前服务器时间: ".date('Y/m/d H:i:s', time());
 }
 
-function getvideoTime($file_path,$isOutSecond=FALSE){
+function getVideoTime($file_path,$isOutSecond=FALSE){
     $file_path = formatSpace($file_path);
     $video_time = exec ("ffmpeg -i ".$file_path." 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//");// 总长度
     $video_time = explode(':',explode('.',$video_time)[0]);
@@ -186,7 +192,7 @@ function getVideoInformation($file_path){
     $file_name = getFileName($file_path);
     $file_hash = getFileMD5($file_path);
     $file_size = filesize($file_path);
-    $video_duration = getvideoTime($file_path,TRUE)[0];
+    $video_duration = getVideoTime($file_path,TRUE)[0];
     $match_mode = 'hashAndFileName';
     $post_result = exec("curl -X POST --header 'Content-Type: text/xml' --header 'Accept: text/json' -d '<?xml version=\"1.0\"?> <MatchRequest> <fileName>".$file_name."</fileName> <fileHash>".$file_hash."</fileHash> <fileSize>".$file_size."</fileSize> <videoDuration>".$video_duration."</videoDuration> <matchMode>".$match_mode."</matchMode> </MatchRequest>' 'https://api.acplay.net/api/v2/match'");
     preg_match_all('/\"episodeId\":(.*?),/', $post_result, $episodeId_matches);
@@ -212,6 +218,11 @@ function saveVideoInformationForFolder($get_information_folder,$Force_make=FALSE
     }
 }
 
+function saveVideoInformationForRoot($root,$Force_make){
+    foreach(listRoot($root,FALSE) as $each_in_root_mix){
+        saveVideoInformationForFolder($each_in_root_mix,$Force_make);
+    }    
+}
 
 function saveVideoInformation($file_path,$Force_make=FALSE){
     $folder_name = md5(getFileName(getFileName(dirname($file_path,1),TRUE)));
@@ -255,10 +266,10 @@ function readVideoInformationFromMD5($md5){
 
 function mkCardForFolder($folder_path){
     foreach(countFolder($folder_path)[1] as $each_video_path){
-        $video_pic_link = getvideoPic($each_video_path,TRUE);
+        $video_pic_link = getVideoPic($each_video_path,TRUE);
         $video_file_name = getFileName($each_video_path);
         $video_file_size = getFileSize($each_video_path);
-        $video_time = getvideoTime($each_video_path)[0];
+        $video_time = getVideoTime($each_video_path)[0];
         $video_information_list = readVideoInformation($each_video_path,TRUE)[0];
         //print_r(getVideoInformation($each_video_path)[1].'</br>');
         $animeTitle = removeQuote($video_information_list['animeTitle']);
@@ -281,6 +292,51 @@ function mkCardForRoot($root,$point=""){
     }
 }
 
+function getVideoFileFromMD5($md5){
+    $video_path = readVideoInformationFromMD5($md5)[0]['file_path'];
+    $video_url = './'.getFileName($GLOBALS['video_root_path'],TRUE).'/'.getFileName(dirname($video_path,1),TRUE).'/'.getFileName($video_path,TRUE);
+    return ($video_url);
+}
+
+function downloadComment($file_path,$Force_downlaod=FALSE){
+    $video_information_list = readVideoInformation($file_path)[0];
+    $episodeId = $video_information_list['episodeId'];
+    $folder_name = md5(getFileName(getFileName(dirname($file_path,1),TRUE)));
+    $file_name = md5(getFileName($file_path));
+    if(!isExists($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$episodeId.'.json') or $Force_downlaod){
+        exec("wget -O ".$GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$episodeId.'.json'." https://api.acplay.net/api/v2/comment/".$episodeId."?withRelated=true");
+    }
+}
+
+function downloadCommentForFolder($folder_path,$Force_downlaod=FALSE){
+    foreach((countFolder($folder_path)[1]) as $file_path){
+        downloadComment($file_path,$Force_downlaod);
+    }
+}
+
+function getCommentFromMD5($md5){
+    $video_information_list = readVideoInformationFromMD5($md5)[0];
+    $episodeId = $video_information_list['episodeId'];
+    $parent_md5 = explode("-",$md5)[0];
+    $video_md5 = explode("-",$md5)[1];
+    $comment_list = (json_decode(file_get_contents($GLOBALS['data_path'].'/'.$parent_md5.'/'.$video_md5.'/'.$episodeId.'.json'),TRUE));
+    $comment_test = "";
+    $comment_test = $comment_test.'{"code":0,"data":[';
+    foreach($comment_list['comments'] as $each_in_list){
+        $p_list = explode(',',$each_in_list['p']);
+        $p0 = $p_list[0];
+        $p1 = $p_list[1];
+        if($p1 == "1"){$p1 = "0";}
+        $p2 = $p_list[2];
+        $p3 = $p_list[3];
+        $comment_test = $comment_test."[".$p0.",".$p1.",".$p2.',"'.$p3.'","'.$each_in_list['m'].'"],';
+    }
+    $comment_test = rtrim($comment_test, ",");
+    $comment_test = $comment_test."]}";
+    echo($comment_test);
+}
+
+
 $path_fot_test = "/var/www/html/ddp/video/末日时在做什么？有没有空？可以来拯救吗？/[KxIX]Shuumatsu Nani Shitemasuka Isogashii Desuka Sukutte Moratte Ii Desuka 11[GB][1080P].mp4";
 
 
@@ -293,16 +349,18 @@ elseif($_GET['action']=='mkpic'){
 elseif($_GET['action']=='getFileName'){ 
     echo(getFileName($path_fot_test,TRUE));
 }
-elseif($_GET['action']=='getvideoPic'){
-    echo (getvideoPic($path_fot_test));
+elseif($_GET['action']=='getVideoPic'){
+    echo (getVideoPic($path_fot_test));
 }
 elseif($_GET['action']=='saveVideoInformation'){
-    saveVideoInformationForFolder(listRoot($video_root_path,FALSE)[1],$Force_make=TRUE);
+    saveVideoInformationForFolder(listRoot($video_root_path,FALSE)[0],FALSE);
+}
+elseif($_GET['action']=='getCommentFromMD5'){
+    getCommentFromMD5($_GET['md5']);
 }
 elseif($_GET['action']=='test'){
     echo ("这是一个测试接口!</br>");
-    //mkCardForRoot($video_root_path);
-    readVideoInformationFromMD5("3443dab0dcee781a18e927eb92a50740-b91988b81a6f12fb1389af69ab707bde");
+    //getCommentFromMD5('3443dab0dcee781a18e927eb92a50740-b41cd25ff644882b5636396df6075059');
     echo ("</br>输出结束!</br>");
 }
 
