@@ -339,8 +339,9 @@ function getCommentFromMD5($md5){
 function mkList($folder_path,$now_path=""){
     foreach(countFolder($folder_path)[1] as $each_path){
         $video_name_all = getFileName($each_path,TRUE);
+        //echo($video_name_all);
         $episodeTitle = removeQuote(readVideoInformation($each_path)[0]['episodeTitle']);
-        $video_parent_path_md5 = md5($video_name_all);
+        $video_parent_path_md5 = md5(getFileName(dirname($each_path,1),TRUE));
         $video_file_md5 = md5(getFileName($each_path));
         $video_url = './video.php?video='.$video_parent_path_md5."-".$video_file_md5;
         echo('<a href="'.$video_url.'" class="list-group-item list-group-item-action ');
@@ -348,6 +349,7 @@ function mkList($folder_path,$now_path=""){
             echo('active');
         }
         echo('">'.$episodeTitle.'<small>'.$video_name_all.'</small></a>');
+        //echo('</br>');
     }
 }
 
@@ -383,7 +385,7 @@ elseif($_GET['action']=='getCommentFromMD5'){
 elseif($_GET['action']=='test'){
     echo ("这是一个测试接口!</br>");
     //downloadCommentForFolder(listRoot($video_root_path,FALSE)[1]);
-    //mkListFromMD5('3443dab0dcee781a18e927eb92a50740-705f4e351422f9e020a34d871d076072');
+    mkListFromMD5('3443dab0dcee781a18e927eb92a50740-705f4e351422f9e020a34d871d076072');
     echo ("</br>输出结束!</br>");
 }
 
