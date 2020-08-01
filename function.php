@@ -277,8 +277,9 @@ function mkCardForFolder($folder_path){
         $video_path = $video_information_list['file_path'];
         $video_parent_path_md5 = md5(getFileName(dirname($video_path),TRUE));
         $video_file_md5 = md5(getFileName($video_path));
+        $last_time = readLastTime($each_video_path);
         //echo ($video_file_md5."</br>");
-        echo ('<div class="col-sm-6 col-md-4 float-left pt-4"><div class="card"><a href="./video.php?video='.$video_parent_path_md5."-".$video_file_md5.'"><img class="card-img-top" src="'.$video_pic_link.'" alt="Card image cap"></a><div class="card-body"><h5 class="card-title line-limit-length"><a href="./index.php?animeName='.$animeTitle.'">'.$animeTitle.'</a></h5><h5 class="card-title" style="overflow: hidden; white-space: nowrap;text-overflow: ellipsis"></h5><p class="video-text line-limit-length"><a href="./video.php?video='.$video_parent_path_md5."-".$video_file_md5.'">'.$episodeTitle.'</a><br>'.$video_file_name.'<br>时长：'.$video_time.'<br>文件体积：'.$video_file_size.'<br>上次播放：暂未实现</p></div></div></div>');
+        echo ('<div class="col-sm-6 col-md-4 float-left pt-4"><div class="card"><a href="./video.php?video='.$video_parent_path_md5."-".$video_file_md5.'"><img class="card-img-top" src="'.$video_pic_link.'" alt="Card image cap"></a><div class="card-body"><h5 class="card-title line-limit-length"><a href="./index.php?animeName='.$animeTitle.'">'.$animeTitle.'</a></h5><h5 class="card-title" style="overflow: hidden; white-space: nowrap;text-overflow: ellipsis"></h5><p class="video-text line-limit-length"><a href="./video.php?video='.$video_parent_path_md5."-".$video_file_md5.'">'.$episodeTitle.'</a><br>'.$video_file_name.'<br>时长：'.$video_time.'<br>文件体积：'.$video_file_size.'<br>上次播放：'.$last_time.'</p></div></div></div>');
     }
 }
 
@@ -360,6 +361,26 @@ function mkListFromMD5($md5){
     mkList($video_folder,$video_now_path);
 }
 
+function saveLastTime($md5){
+    $parent_md5 = explode("-",$md5)[0];
+    $video_md5 = explode("-",$md5)[1];
+    $last_time_json_path = $GLOBALS['data_path'].'/'.$parent_md5.'/'.$video_md5.'/last_time.json';
+    date_default_timezone_set("Asia/Shanghai");
+    $time_now = date('Y/m/d H:i:s', time());
+    file_put_contents($last_time_json_path,json_encode(array('last_time' => $time_now)));
+}
+
+function readLastTime($file_path){
+    $folder_name = md5(getFileName(getFileName(dirname($file_path,1),TRUE)));
+    $file_name = md5(getFileName($file_path));
+    if(!isExists($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/last_time.json')){
+        return("无");
+    }
+    $last_time_json = file_get_contents($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/last_time.json');
+    $last_time = json_decode($last_time_json,TRUE)['last_time'];
+    return $last_time;
+
+}
 
 $path_fot_test = "/var/www/html/ddp/video/末日时在做什么？有没有空？可以来拯救吗？/[KxIX]Shuumatsu Nani Shitemasuka Isogashii Desuka Sukutte Moratte Ii Desuka 11[GB][1080P].mp4";
 
@@ -384,8 +405,7 @@ elseif($_GET['action']=='getCommentFromMD5'){
 }
 elseif($_GET['action']=='test'){
     echo ("这是一个测试接口!</br>");
-    //downloadCommentForFolder(listRoot($video_root_path,FALSE)[1]);
-    mkListFromMD5('3443dab0dcee781a18e927eb92a50740-705f4e351422f9e020a34d871d076072');
+    //saveLastTime('3443dab0dcee781a18e927eb92a50740-e14822833a7c329477d6867001f241c2');
     echo ("</br>输出结束!</br>");
 }
 

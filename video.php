@@ -114,18 +114,6 @@
 			<div class="card-body">
 				<div class="list-group list-group-flush">
 				<?php include_once 'function.php';mkListFromMD5($_GET['video']); ?>
-					<!-- @Each.VideoFiles
-					<a href="./web/@Current.Id" class="list-group-item list-group-item-action
-				@If.IsCurrent
-				active
-				@EndIf
-			    ">
-						@Current.EpisodeTitle
-						<small>
-							@Current.FileName
-						</small>
-					</a>
-					@EndEach -->
 				</div>
 			</div>
 		</div>
@@ -178,5 +166,6 @@
 			$(".dplayer-video").attr("crossorigin", "use-credentials");
 		});
 	</script>
+	<?php include_once 'function.php';saveLastTime($_GET['video']); ?>
 </body>
 </html>
