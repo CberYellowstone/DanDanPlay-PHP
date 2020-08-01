@@ -147,6 +147,12 @@ function mkpicForFolder($mkpic_folder){
     }
 }
 
+function mkpicForRoot($root){
+    foreach(listRoot($root,FALSE) as $each_in_root_mix){
+        mkpicForFolder($each_in_root_mix);
+    }    
+}
+
 //带路径
 function getVideoPic($file_path,$auto_mk=FALSE){
     $video_name_md5 = md5(getFileName($file_path));
@@ -218,7 +224,7 @@ function saveVideoInformationForFolder($get_information_folder,$Force_make=FALSE
     }
 }
 
-function saveVideoInformationForRoot($root,$Force_make){
+function saveVideoInformationForRoot($root,$Force_make=FALSE){
     foreach(listRoot($root,FALSE) as $each_in_root_mix){
         saveVideoInformationForFolder($each_in_root_mix,$Force_make);
     }    
@@ -312,6 +318,12 @@ function downloadComment($file_path,$Force_downlaod=FALSE){
 function downloadCommentForFolder($folder_path,$Force_downlaod=FALSE){
     foreach((countFolder($folder_path)[1]) as $file_path){
         downloadComment($file_path,$Force_downlaod);
+    }
+}
+
+function downloadCommentForRoot($root,$Force_downlaod=FALSE){
+    foreach(listRoot($root,FALSE) as $each_in_root_mix){
+        downloadCommentForFolder($each_in_root_mix);
     }
 }
 
