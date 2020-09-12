@@ -10,6 +10,10 @@ PHP需求版本不知道,个人是PHP7.4
 
 用到了[DanDanPlay API](https://api.acplay.net/swagger/ui/index#/),弹幕会比电脑端少一些,但基本一致(和手机端理论一致)
 
+## 已知问题
+
+* 有的番剧弹幕会报错,没空修,有愿意接坑的可以试试接屎山
+
 ## 说明
 
 * 主页是index.php,function.php里面是所有功能组件
@@ -31,7 +35,7 @@ PHP需求版本不知道,个人是PHP7.4
 * [腾讯工蜂](https://git.code.tencent.com/Yellowstone/DanDanPlay-PHP)
 
 ## DEMO
-[个人demo](https://apps.ystone.top:488/ddp/)(暂时只做到主页面)
+[个人demo](https://apps.ystone.top:488/ddp/)(见已知问题)
 
 ## 目前使用的第三方组件
 
