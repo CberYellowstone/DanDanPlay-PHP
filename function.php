@@ -333,20 +333,24 @@ function getCommentFromMD5($md5){
     $parent_md5 = explode("-",$md5)[0];
     $video_md5 = explode("-",$md5)[1];
     $comment_list = (json_decode(file_get_contents($GLOBALS['data_path'].'/'.$parent_md5.'/'.$video_md5.'/'.$episodeId.'.json'),TRUE));
-    $comment_test = "";
-    $comment_test = $comment_test.'{"code":0,"data":[';
+    $comment_text = "";
+    $comment_text = $comment_text.'{"code":0,"data":[';
     foreach($comment_list['comments'] as $each_in_list){
         $p_list = explode(',',$each_in_list['p']);
         $p0 = $p_list[0];
         $p1 = $p_list[1];
-        if($p1 == "1"){$p1 = "0";}
         $p2 = $p_list[2];
         $p3 = $p_list[3];
-        $comment_test = $comment_test."[".$p0.",".$p1.",".$p2.',"'.$p3.'","'.$each_in_list['m'].'"],';
+        $comment =  $each_in_list['m'];
+        $comment = str_replace('\\','\\\\',$comment);
+        $comment = str_replace('"','\"',$comment);
+        $comment_text = $comment_text."[".$p0.",".$p1.",".$p2.',"'.$p3.'","'.$comment.'"],';
     }
-    $comment_test = rtrim($comment_test, ",");
-    $comment_test = $comment_test."]}";
-    echo($comment_test);
+    $comment_text = rtrim($comment_text, ",");
+    $comment_text = $comment_text."]}";
+    $comment_text = str_replace(array("\r\n", "\r", "\n"), "", $comment_text);
+    header('Content-Type:application/json; charset=utf-8');
+    echo($comment_text);
 }
 
 function mkList($folder_path,$now_path=""){
@@ -394,7 +398,7 @@ function readLastTime($file_path){
 
 }
 
-$path_fot_test = "/var/www/html/ddp/video/末日时在做什么？有没有空？可以来拯救吗？/[KxIX]Shuumatsu Nani Shitemasuka Isogashii Desuka Sukutte Moratte Ii Desuka 11[GB][1080P].mp4";
+//$path_fot_test = "/var/www/html/ddp/video/末日时在做什么？有没有空？可以来拯救吗？/[KxIX]Shuumatsu Nani Shitemasuka Isogashii Desuka Sukutte Moratte Ii Desuka 11[GB][1080P].mp4";
 
 
 if($_GET['action']=='listRoot'){
