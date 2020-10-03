@@ -6,7 +6,7 @@ $video_root_path=dirname(__FILE__).'/video';
 $data_path=dirname(__FILE__).'/data';
 
 $site_name = "Yellowstone's Anime Site";
-$version = "Alpha 0.0.2";
+$version = "Alpha 0.1.0";
 $DanmakuArea = "83%";
 $DanmakuDurationCss = "danmaku 9s linear";
 $About_link = "https://github.com/CberYellowstone/DanDanPlay-PHP";
