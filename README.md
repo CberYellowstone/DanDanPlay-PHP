@@ -36,7 +36,7 @@
 * [腾讯工蜂](https://git.code.tencent.com/Yellowstone/DanDanPlay-PHP)
 
 ## DEMO
-[个人demo](https://apps.ystone.top:488/ddp/)~~~(见已知问题)~~~
+[个人demo](https://apps.ystone.top:488/ddp/)~~(见已知问题)~~
 
 ## 目前使用的第三方组件
 
