@@ -135,12 +135,13 @@
 		$(document).ready(function () {
 			var dp = new DPlayer({
 				container: document.getElementById('dplayer'), //播放器容器元素
-				theme: '@Model.Color', //控件的颜色
+				theme: '#b7daff', //控件的颜色
 				loop: false, //循环
 				screenshot: true, //截图
 				hotkey: true, //热键
 				preload: 'metadata', //预加载
 				//logo: 'http://www.dandanplay.com/logo.png',        //播放器左上角logo
+				playbackSpeed:[0.5, 0.75, 1, 1.25, 1.5, 2],
 				volume: 1, //默认音量
 				mutex: true, //互斥，阻止多个播放器同时播放
 				video: {
@@ -153,10 +154,11 @@
 					api: './function.php?action=getCommentFromMD5&md5=', //弹幕库api
 					bottom: '15%', //底部距离
 					unlimited: false, //无限制
-					maximum: 60 //最大弹幕
+					maximum: 30 //最大弹幕
 				},
 				subtitle: {
-					url: '@Model.SubtitleVtt',
+					url: './function.php',
+					//TODO: 字幕
 					type: 'webvtt',
 					fontSize: '25px',
 					bottom: '10%',
