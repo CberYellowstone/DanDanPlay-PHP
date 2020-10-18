@@ -4381,6 +4381,12 @@ tbody.collapse.show {
   color: #fff;
 }
 
+#qrcode{
+  right: 150px;
+  position: absolute;
+}
+
+
 .navbar-dark .navbar-brand:hover, .navbar-dark .navbar-brand:focus {
   color: #fff;
 }

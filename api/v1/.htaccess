@@ -1,0 +1,7 @@
+RewriteEngine On
+RewriteRule library api.php?action=library
+RewriteRule ^image/(.*)$ api.php?action=image&id=$1
+RewriteRule ^stream/(.*)$ api.php?action=stream&id=$1
+RewriteRule ^comment/(.*)$ api.php?action=comment&id=$1
+
+#RewriteRule ^(.*?)$ api.php?func=$1

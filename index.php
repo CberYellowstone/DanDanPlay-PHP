@@ -7,6 +7,7 @@
 	<title><?php include_once 'function.php';echo ($site_name); ?></title>
 	<link rel="stylesheet" href="./css/bootstrap-4.0.0.css">
 	<script src="js/jquery-3.2.1.min.js"></script>
+	<script src="./js/qrcode.js"></script>
 	<style>
 		body {
 			background-image: url(./src/background.png);
@@ -67,7 +68,13 @@
 						<a class="nav-link" href="<?php include_once 'function.php';echo ($About_link); ?>" target="_blank">关于</a>
 					</li>
 					<li class="nav-item">
+						<a class="nav-link" href="https://github.com/CberYellowstone/DanDanPlay-PHP" target="_blank">Bug反馈</a>
+					</li>
+					<li class="nav-item">
 						<a class="nav-link" href="https://github.com/kaedei/dandanplay-libraryindex" target="_blank">帮助改进此页面</a>
+					</li>
+					<li class="nav-item">
+					<a class="nav-link" id="qrcode" onclick="switchqrcode();">远程访问</a>
 					</li>
 				</ul>
 				<form class="form-inline my-2 my-lg-0" method="POST" action="./">
@@ -77,6 +84,8 @@
 			</div>
 		</div>
 	</nav>
+
+	<img src='<?php include_once 'function.php'; echo('https://wenhairu.com/static/api/qr/?size=300&text={"about":"请使用支持弹弹play远程访问功能的客户端扫描此二维码","ip":["'.$remote_addres.'"],"port":'.$remote_port.',"machineName":"'.urljsonDecode($site_name).'","currentUser":"'.urljsonDecode($user_name).'","tokenRequired":false}');?>' id="qrcode_img" style='display:none;margin-left:auto;margin-right:auto;' width="300px" hight="300px">
 
 
 	<div class="clearfix row nobords">
@@ -88,7 +97,7 @@
 			</div>
 		</div>
 		<div class=" col-md-9 col-xs-12 float-left transform">
-		<?php include_once 'function.php';mkCardForRoot($video_root_path,$_GET['animeName']);?>
+		<?php include_once 'function.php';mkCardForRoot($video_root_path,$_GET['animeName'],$_POST['q']);?>
 			<div class="col-12 float-right text-center pt-5">
 				<p><?php include_once 'function.php';echo ($site_name); ?> 由 弹弹play 提供部分支持.<br /><?php include_once 'function.php'; echoServerInformation()?></p>
 				<p></p>

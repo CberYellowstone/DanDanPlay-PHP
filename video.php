@@ -9,6 +9,7 @@
 	<link href="./css/bootstrap-4.0.0.css" rel="stylesheet">
 	<link rel="stylesheet" href="./css/DPlayer.min.css">
 	<script src="./js/DPlayer.min.js"></script>
+	<script src="./js/qrcode.js"></script>
 	<style type="text/css">
 		/* ReSharper disable InvalidValue */
 		/* ReSharper disable CssNotResolved */
@@ -84,14 +85,21 @@
 					<li class="nav-item">
 						<a class="nav-link" href="<?php include_once 'function.php';echo ($About_link); ?>" target="_blank">关于</a>
 					</li>
-
+					<li class="nav-item">
+						<a class="nav-link" href="https://github.com/CberYellowstone/DanDanPlay-PHP" target="_blank">Bug反馈</a>
+					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="https://github.com/kaedei/dandanplay-libraryindex" target="_blank">帮助改进此页面</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="qrcode" onclick="switchqrcode();">远程访问</a>
 					</li>
 				</ul>
 			</div>
 		</div>
 	</nav>
+
+	<img src='<?php include_once 'function.php'; echo('https://wenhairu.com/static/api/qr/?size=300&text={"about":"请使用支持弹弹play远程访问功能的客户端扫描此二维码","ip":["'.$remote_addres.'"],"port":'.$remote_port.',"machineName":"'.urljsonDecode($site_name).'","currentUser":"'.urljsonDecode($user_name).'","tokenRequired":false}');?>' id="qrcode_img" style='display:none;margin-left:auto;margin-right:auto;' width="300px" hight="300px">
 
 	<div class="container">
 		<nav aria-label="breadcrumb">
