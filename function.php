@@ -1,15 +1,8 @@
-<?php  
-global $video_root_path;
-global $data_path;
-global $version;
-$video_root_path=dirname(__FILE__).'/video';
-$data_path=dirname(__FILE__).'/data';
+<?php
 
-$site_name = "Yellowstone's Anime Site";
-$version = "Alpha 0.1.0";
-$DanmakuArea = "83%";
-$DanmakuDurationCss = "danmaku 9s linear";
-$About_link = "https://github.com/CberYellowstone/DanDanPlay-PHP";
+use sqhlib\Hanzi\HanziConvert;
+include_once 'zh-t2s/HanziConvert.php';
+include_once 'config.php';
 
 function isCil(){
     return preg_match("/cli/i", php_sapi_name()) ? 1 : 0;
@@ -25,6 +18,14 @@ function removeQuote($str) {
     }
     return $str;
 }
+
+function urljsonDecode($value) { 
+    $escapers = array("\\", "/", '"', "\n", "\r", "\t", "\x08", "\x0c", "'");
+    $replacements = array("\\\\", "\\/", "\\\"", "\\n", "\\r", "\\t", "\\f", "\\b", "%27");
+    $result = str_replace($escapers, $replacements, $value);
+    return $result;
+}
+
 function getFileSize($file_path){
     $file_size = filesize($file_path);
     $KB = 1024;$MB = 1024 * $KB;$GB = 1024 * $MB;$TB = 1024 * $GB;
@@ -244,11 +245,11 @@ function saveVideoInformation($file_path,$Force_make=FALSE){
         }   
         //echo($video_information_json.'</br>');    
         file_put_contents($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json', $video_information_json);    
-    }elseif(isExists($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json')){
+    }//elseif(isExists($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json')){
         //echo (readVideoInformation($file_path)[1]).'</br>';
         //print_r(readVideoInformation($file_path)[0]['file_path']);
         //echo ("</br>");
-    } 
+    //} 
 }
 
 function readVideoInformation($file_path,$auto_get=FALSE){
@@ -270,7 +271,7 @@ function readVideoInformationFromMD5($md5){
     return array($video_information_list,$video_information_json);
 }
 
-function mkCardForFolder($folder_path){
+function mkCardForFolder($folder_path,$isSreaching=''){
     foreach(countFolder($folder_path)[1] as $each_video_path){
         $video_pic_link = getVideoPic($each_video_path,TRUE);
         $video_file_name = getFileName($each_video_path);
@@ -280,6 +281,10 @@ function mkCardForFolder($folder_path){
         //print_r(getVideoInformation($each_video_path)[1].'</br>');
         $animeTitle = removeQuote($video_information_list['animeTitle']);
         $episodeTitle = removeQuote($video_information_list['episodeTitle']);
+        if($isSreaching && !(strstr((HanziConvert::convert($video_file_name.$animeTitle.$episodeTitle)),$isSreaching))){
+            //echo $video_file_name.$animeTitle.$episodeTitle.'</br>';
+            continue;
+        }
         $video_path = $video_information_list['file_path'];
         $video_parent_path_md5 = md5(getFileName(dirname($video_path),TRUE));
         $video_file_md5 = md5(getFileName($video_path));
@@ -289,13 +294,13 @@ function mkCardForFolder($folder_path){
     }
 }
 
-function mkCardForRoot($root,$point=""){
+function mkCardForRoot($root,$point="",$isSreaching=''){
     if(!$point){
         foreach(listRoot($root,FALSE) as $each_in_root_mix){
-            mkCardForFolder($each_in_root_mix);
+            mkCardForFolder($each_in_root_mix,$isSreaching);
         }    
     } else {
-        mkCardForFolder($root.'/'.$point);
+        mkCardForFolder($root.'/'.$point,$isSreaching);
     }
 }
 
