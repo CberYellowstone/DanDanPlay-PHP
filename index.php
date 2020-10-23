@@ -1,3 +1,12 @@
+<?php include_once 'function.php';
+if($authorization and !checkUserAndPasswordFromCookie($_COOKIE["Username"], $_COOKIE["Auth"])) {
+	sendStatusCode(303, 'See Other', './login.php', 0);
+} 
+if(!$authorization){
+	setcookie("Username",'',time()-1);
+	setcookie("Auth",'', time()-1);
+}
+?>
 <html lang="zh-CN">
 <head>
 	<meta charset="utf-8">
@@ -5,9 +14,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="shortcut icon" href="css/icon.png" type="image/x-icon">
 	<title><?php include_once 'function.php';echo ($site_name); ?></title>
-	<link rel="stylesheet" href="./css/bootstrap-4.0.0.css">
-	<script src="js/jquery-3.2.1.min.js"></script>
-	<script src="./js/qrcode.js"></script>
+	<link rel="stylesheet" href="./css/bootstrap.min.css">
+	<script src="js/jquery-3.5.1.min.js"></script>
+	<script src="./js/function.js"></script>
 	<style>
 		body {
 			background-image: url(./src/background.png);
@@ -38,10 +47,11 @@
 		}
 
 		.transform {
-			background-color: rgba(255,255,255,0.8);
+			background-color: rgba(255, 255, 255, 0.8);
 		}
 	</style>
 </head>
+
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container">
@@ -54,16 +64,7 @@
 					<li class="nav-item active">
 						<a class="nav-link" href="./">首页</a>
 					</li>
-					<!-- @IfNot.IsAnonymous
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							@@Model.UserName
-						</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-							<a class="dropdown-item" href="/logout">注销登录</a>
-						</div>
-					</li>
-					@EndIf -->
+					<?php include_once 'function.php';if($_COOKIE["Username"]!=''){echo('<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.$_COOKIE["Username"].'</a><div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink"><a class="dropdown-item" href="./login.php?logout=true">注销登录</a></div></li>');} ?>
 					<li class="nav-item">
 						<a class="nav-link" href="<?php include_once 'function.php';echo ($About_link); ?>" target="_blank">关于</a>
 					</li>
@@ -99,20 +100,14 @@
 		<div class=" col-md-9 col-xs-12 float-left transform">
 		<?php include_once 'function.php';mkCardForRoot($video_root_path,$_GET['animeName'],$_POST['q']);?>
 			<div class="col-12 float-right text-center pt-5">
-				<p><?php include_once 'function.php';echo ($site_name); ?> 由 弹弹play 提供部分支持.<br /><?php include_once 'function.php'; echoServerInformation()?></p>
+				<p><?php include_once 'function.php';echo ($site_name."由 弹弹play 提供部分支持.</br>");echoServerInformation()?></p>
 				<p></p>
 			</div>
-
 		</div>
-
-
 	</div>
 
-
-
 	<script src="js/popper.min.js"></script>
-	<script src="js/bootstrap-4.0.0.js"></script>
-
+	<script src="js/bootstrap.min.js"></script>
 
 </body>
 </html>

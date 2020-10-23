@@ -1,4 +1,14 @@
-﻿<!DOCTYPE html>
+﻿<?php include_once 'function.php';
+if($authorization and !checkUserAndPasswordFromCookie($_COOKIE["Username"], $_COOKIE["Auth"])) {
+	sendStatusCode(303, 'See Other', './login.php', 0);
+} 
+if(!$authorization){
+	setcookie("Username",'',time()-1);
+	setcookie("Auth",'', time()-1);
+}
+?>
+
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 	<meta charset="UTF-8">
@@ -6,10 +16,10 @@
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title><?php include_once 'function.php';echo (removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['animeTitle'])." - ".removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['episodeTitle'])." - ".$site_name); ?></title>
 	<link rel="shortcut icon" href="./css/icon.png" type="image/x-icon">
-	<link href="./css/bootstrap-4.0.0.css" rel="stylesheet">
+	<link href="./css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="./css/DPlayer.min.css">
 	<script src="./js/DPlayer.min.js"></script>
-	<script src="./js/qrcode.js"></script>
+	<script src="./js/function.js"></script>
 	<style type="text/css">
 		/* ReSharper disable InvalidValue */
 		/* ReSharper disable CssNotResolved */
@@ -63,25 +73,16 @@
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container">
-			<a class="navbar-brand" href="#"><?php include_once 'function.php';echo ($site_name); ?></a>
+			<a class="navbar-brand" href="."><?php include_once 'function.php';echo ($site_name); ?></a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item active">
-						<a class="nav-link" href="./index.php">首页</a>
+						<a class="nav-link" href="./">首页</a>
 					</li>
-					<!-- @IfNot.IsAnonymous
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							@@Model.UserName
-						</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-							<a class="dropdown-item" href="./logout">注销登录</a>
-						</div>
-					</li>
-					@EndIf -->
+					<?php include_once 'function.php';if($_COOKIE["Username"]!=''){echo('<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.$_COOKIE["Username"].'</a><div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink"><a class="dropdown-item" href="./login.php?logout=true">注销登录</a></div></li>');} ?>
 					<li class="nav-item">
 						<a class="nav-link" href="<?php include_once 'function.php';echo ($About_link); ?>" target="_blank">关于</a>
 					</li>
@@ -99,13 +100,13 @@
 		</div>
 	</nav>
 
-	<img src='<?php include_once 'function.php'; echo('https://wenhairu.com/static/api/qr/?size=300&text={"about":"请使用支持弹弹play远程访问功能的客户端扫描此二维码","ip":["'.$remote_addres.'"],"port":'.$remote_port.',"machineName":"'.urljsonDecode($site_name).'","currentUser":"'.urljsonDecode($user_name).'","tokenRequired":false}');?>' id="qrcode_img" style='display:none;margin-left:auto;margin-right:auto;' width="300px" hight="300px">
+	<img src='<?php include_once 'function.php'; echo('https://wenhairu.com/static/api/qr/?size=300&text={"about":"请使用支持弹弹play远程访问功能的客户端扫描此二维码","ip":["'.$remote_addres.'"],"port":'.$remote_port.',"machineName":"'.urljsonDecode($site_name).'","currentUser":"'.urljsonDecode($root_username).'","tokenRequired":false}');?>' id="qrcode_img" style='display:none;margin-left:auto;margin-right:auto;' width="300px" hight="300px">
 
 	<div class="container">
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item">
-					<a href="./index.php">首页</a>
+					<a href="./">首页</a>
 				</li>
 				<li class="breadcrumb-item">
 					<a href="./index.php?animeName=<?php include_once 'function.php';echo (removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['animeTitle'])); ?>"><?php include_once 'function.php';echo (removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['animeTitle'])); ?></a>
@@ -136,14 +137,14 @@
 		</div>
 	</div>
 
-	<script src="./js/jquery-3.2.1.min.js"></script>
+	<script src="./js/jquery-3.5.1.min.js"></script>
 	<!--<script src="./js/popper.min.js"></script>-->
-	<script src="./js/bootstrap-4.0.0.js"></script>
+	<script src="./js/bootstrap.min.js"></script>
 	<script>
 		$(document).ready(function () {
 			var dp = new DPlayer({
 				container: document.getElementById('dplayer'), //播放器容器元素
-				theme: '#b7daff', //控件的颜色
+				theme: '#0099FF', //控件的颜色
 				loop: false, //循环
 				screenshot: true, //截图
 				hotkey: true, //热键

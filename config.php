@@ -10,12 +10,11 @@ $version = "Alpha 0.2.0";
 
 //用户设置
 $site_name = "Yellowstone's Anime Site";//站点名称
-$able_cache = TRUE;
 $remote_port = "8009";//远程访问端口号,需为http协议,留空取访问时端口号
 $remote_addres = "apps.ystone.top";//留空则为访问时地址
 $authorization = FALSE;
 $root_username = "Yellowstone";//随便填
-$web_users=array('Yellowstone' => '12345678',);
+$web_users=array('Yellowstone' => '12345678','user2' => 'password',);//账号,密码
 $api_authkey="";
 
 

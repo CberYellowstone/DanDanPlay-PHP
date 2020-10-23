@@ -1,18 +1,50 @@
-﻿<!DOCTYPE html>
+﻿<?php include_once 'function.php';
+if ($_GET['logout'] == 'true' or !$authorization) {
+	setcookie("Username",'',time()-1);
+	setcookie("Auth",'', time()-1);
+}
+if(!$authorization) {
+	sendStatusCode(303, 'See Other', './', 0);
+	exit();
+}
+if(checkUserAndPassword($_POST['Username'],$_POST['Password'])){
+	if($_POST['RememberMe']=="on"){
+		setcookie("Username",$_POST['Username'],time()+60*60*24*30);
+		setcookie("Auth",hash('sha256',$_POST['Password']), time()+60*60*24*30);	
+	}else{
+		setcookie("Username",$_POST['Username'],time()+3600);
+		setcookie("Auth",hash('sha256',$_POST['Password']), time()+3600);	
+	}
+	sendStatusCode(303, 'See Other', './', 0);
+	exit();
+}elseif($_POST['Username']!=""){
+	sendStatusCode(303, 'See Other', './login.php?error=true', 0);
+	exit();
+}
+if(checkUserAndPasswordFromCookie($_COOKIE["Username"], $_COOKIE["Auth"]) and !$_GET['logout'] == 'true') {
+	sendStatusCode(303, 'See Other', './', 0);
+} 
+
+
+?>
+
+<!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
-	<title>弹弹play媒体库</title>
+	<title><?php include_once 'function.php';echo ($site_name); ?></title>
 	<meta charset="UTF-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<link rel="shortcut icon" href="css/icon.png" type="image/x-icon" />
-	<script src="./js/bootstrap-4.0.0.js"></script>
-	<script src="./js/jquery-3.2.1.min.js"></script>
-	<script src="./js/fontawesome-5.5.0.js"></script>
-	<link rel="stylesheet" href="./css/bootstrap-4.0.0.css" />
+	<script src="./js/bootstrap.min.js"></script>
+	<script src="./js/jquery-3.5.1.min.js"></script>
+	<script src="./js/fontawesome.min.js"></script>
+	<link rel="stylesheet" href="./css/bootstrap.min.css" />
 	<style type="text/css">
-		html, body {
-			background-image: url(@Model.Background);
+		html,
+		body {
+			background-image: url(css/background.png);
 			background-size: cover;
 			background-repeat: no-repeat;
 			height: 100%;
@@ -28,7 +60,7 @@
 			margin-top: auto;
 			margin-bottom: auto;
 			width: 400px;
-			background-color: rgba(0,0,0,0.5) !important;
+			background-color: rgba(0, 0, 0, 0.5) !important;
 		}
 
 		.card-header h4 {
@@ -38,8 +70,8 @@
 
 		.input-group-prepend span {
 			width: 40px;
-/* ReSharper disable once InvalidValue */
-			background-color: @Model.Color;;
+			/* ReSharper disable once InvalidValue */
+			background-color: #1BA1E2;
 			color: white;
 			border: 0 !important;
 		}
@@ -63,7 +95,7 @@
 		.login_btn {
 			color: white;
 			/* ReSharper disable once InvalidValue */
-			background-color: @Model.Color;;
+			background-color: #1BA1E2;
 			width: 100px;
 		}
 
@@ -81,12 +113,14 @@
 		}
 	</style>
 </head>
+
 <body>
 	<div class="container">
 		<div class="d-flex justify-content-center h-100">
 			<div class="card">
-				<div class="card-header text-right">
-					<h4>登录弹弹play媒体库</h4>
+				<div class="card-header text-center">
+					<h4>登录<?php include_once 'function.php';
+							echo ($site_name); ?></h4>
 				</div>
 				<div class="card-body">
 					<form method="post">
@@ -100,10 +134,10 @@
 							<div class="input-group-prepend">
 								<span class="input-group-text"><i class="fas fa-key"></i></span>
 							</div>
-							<input type="password" name="Password" class="form-control" placeholder="密码" required/>
+							<input type="password" name="Password" class="form-control" placeholder="密码" required />
 						</div>
 						<div class="row align-items-center remember">
-							<input type="checkbox" name="RememberMe" id="RememberMe"./>
+							<input type="checkbox" name="RememberMe" id="RememberMe" . />
 							<label for="RememberMe">
 								记住我
 							</label>
@@ -113,19 +147,18 @@
 						</div>
 					</form>
 				</div>
-				@If.Error
-				<div class="card-footer">
-					<p class="d-flex justify-content-center text-danger">用户名或密码错误</p>
-					<!--<div class="d-flex justify-content-center links">
+				<?php if ($_GET['error'] == 'true') {echo ('<div class="card-footer"><p class="d-flex justify-content-center text-danger">用户名或密码错误</p></div>');} ?>
+				<!--<div class="d-flex justify-content-center links">
 						没有账号？<a href="#">注册</a>
 					</div>
 					<div class="d-flex justify-content-center">
 						<a href="#">忘记密码？</a>
 					</div>-->
-				</div>
-				@EndIf
 			</div>
+
 		</div>
 	</div>
+	</div>
 </body>
+
 </html>

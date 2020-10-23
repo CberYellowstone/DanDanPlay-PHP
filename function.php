@@ -400,10 +400,42 @@ function readLastTime($file_path){
     $last_time_json = file_get_contents($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/last_time.json');
     $last_time = json_decode($last_time_json,TRUE)['last_time'];
     return $last_time;
-
 }
 
-//$path_fot_test = "/var/www/html/ddp/video/末日时在做什么？有没有空？可以来拯救吗？/[KxIX]Shuumatsu Nani Shitemasuka Isogashii Desuka Sukutte Moratte Ii Desuka 11[GB][1080P].mp4";
+function sendStatusCode($code,$message,$jumpURL="",$contentLength=-1){
+    @header($_SERVER["SERVER_PROTOCOL"]." ".$code." ".$message);//不区分协议1.1 /1.0
+    @header("Status: ".$code." ".$message);
+    http_response_code($code);
+    $_SERVER['REDIRECT_STATUS'] = $code;
+    if($jumpURL){
+        @header('location:'.$jumpURL);
+    }
+    if($contentLength!=-1){
+        @header('Content-Length: '.$contentLength);
+    }
+}
+
+function getIfHTTPS(){
+    if($_SERVER['HTTPS']=='on'){
+        return 'https';
+    }else{
+        return 'http';
+    }
+}
+
+
+function checkUserAndPassword($web_username,$web_password){
+    if(array_key_exists($web_username,$GLOBALS['web_users']) and $GLOBALS['web_users'][$web_username]==$web_password){
+        return TRUE;
+    }
+}
+
+function checkUserAndPasswordFromCookie($cookieWebUserName,$cookieAuth){
+    if(array_key_exists($cookieWebUserName,$GLOBALS['web_users']) and hash('sha256',$GLOBALS['web_users'][$cookieWebUserName])==$cookieAuth){
+        return TRUE;
+    }
+}
+
 
 
 if($_GET['action']=='listRoot'){
