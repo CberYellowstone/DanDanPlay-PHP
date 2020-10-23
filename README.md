@@ -2,11 +2,13 @@
 
 基于 PHP 重构的 [弹弹Play远程访问首页](https://github.com/kaedei/dandanplay-libraryindex)（包含 媒体库内容的展示、视频播放、弹幕以及远程访问）
 
-用于**服务器**部署，已在 `Centos 7` 上通过测试
+用于 **基于的Linux的服务器**部署，已在 `Centos 7` 上通过测试
 
-需求 PHP 7+ ，个人部署环境是 PHP7.4 ，理论上更低版本也行，请自行尝试
+（主要是 `NAS` 上面，你要是 `WindowsServer` 就直接用 `弹弹Play桌面版` 就行了）
 
-需要安装 FFmpeg ，默认路径为 `/usr/bin/ffmpeg` ，可自行更改
+PHP版本要求： `PHP 7+` ，个人部署环境是 `PHP7.4` ，理论上更低版本也行，请自行尝试
+
+另外需要安装 FFmpeg ，默认路径为 `/usr/bin/ffmpeg` ，可自行更改
 
 用到了 [DanDanPlay API](https://api.acplay.net/swagger/ui/index#/) ，弹幕会比电脑端少一丢丢，但基本一致(和手机端理论一致)
 
