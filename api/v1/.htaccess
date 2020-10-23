@@ -1,4 +1,8 @@
 RewriteEngine On
+
+RewriteCond %{HTTP:Authorization} ^(.+)$
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
 RewriteRule library api.php?action=library
 RewriteRule ^image/(.*)$ api.php?action=image&id=$1
 RewriteRule ^stream/(.*)$ api.php?action=stream&id=$1
