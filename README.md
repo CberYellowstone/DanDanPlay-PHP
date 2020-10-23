@@ -2,7 +2,7 @@
 
 基于 PHP 重构的 [弹弹Play远程访问首页](https://github.com/kaedei/dandanplay-libraryindex)（包含 媒体库内容的展示、视频播放、弹幕以及远程访问）
 
-用于 **基于的Linux的服务器**部署，已在 `Centos 7` 上通过测试
+用于 **基于的Linux的服务器** 部署，已在 `Centos 7` 上通过测试
 
 （主要是 `NAS` 上面，你要是 `WindowsServer` 就直接用 `弹弹Play桌面版` 就行了）
 
