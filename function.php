@@ -196,6 +196,7 @@ function getVideoTime($file_path,$isOutSecond=FALSE){
 
 
 function getVideoInformation($file_path){
+    $animeTitleFromDirName = getFileName(dirname($file_path),TRUE);
     $file_name = getFileName($file_path);
     $file_hash = getFileMD5($file_path);
     $file_size = filesize($file_path);
@@ -216,7 +217,18 @@ function getVideoInformation($file_path){
     $episodeTitle_first = $episodeTitle_list[0];
     //echo ($post_result);
     //print_r(array($episodeId_first,$animeId_first,$animeTitle_first,$episodeTitle_first));
+    $i = 0;
+    foreach($animeTitle_list as $animeTitle_each){
+        if($animeTitle_each == '"'.$animeTitleFromDirName.'"'){
+            $animeTitle_first = $animeTitle_each;
+            $episodeId_first = $episodeId_list[$i];
+            $animeId_first = $animeId_list[$i];
+            $episodeTitle_first = $episodeTitle_list[$i];
+        }
+        $i = $i + 1;
+    }
     return array($post_result,array($episodeId_first,$animeId_first,$animeTitle_first,$episodeTitle_first));
+    return "";
 }
 
 function saveVideoInformationForFolder($get_information_folder,$Force_make=FALSE){
