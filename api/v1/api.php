@@ -76,8 +76,13 @@ function mkJsonIndexForRoot($root){
 function sendVideoPicFromMD5($md5){
     $parent_md5 = explode("-",$md5)[0];
     $video_md5 = explode("-",$md5)[1];
-    @ header("Content-Type:image/png");
-    echo (file_get_contents(($GLOBALS['data_path'].'/'.$parent_md5.'/'.$video_md5.'/'.$video_md5.'.jpg')));
+    //@ header("Content-Type:image/png");
+    @ header("Content-Type:image/webp");
+    if($GLOBALS['able_webp']){
+        echo (file_get_contents(($GLOBALS['data_path'].'/'.$parent_md5.'/'.$video_md5.'/'.$video_md5.'.webp')));
+    } else {
+        echo (file_get_contents(($GLOBALS['data_path'].'/'.$parent_md5.'/'.$video_md5.'/'.$video_md5.'.jpg')));
+    }
 }
 
 

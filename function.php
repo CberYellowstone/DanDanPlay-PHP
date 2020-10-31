@@ -119,21 +119,24 @@ function formatSpace($need_format_str){
 }
 
 //$video_file,$pic_name均为为完整带路径文件名
-function mkpic($video_file,$video_time,$pic_name,$pic_size) {
+function mkpic($video_file,$video_time,$pic_name,$pic_size,$isFouce=FALSE) {
     $video_file = formatSpace($video_file);
-    $mkpic_command = "/usr/bin/ffmpeg -ss ".$video_time." -i ".$video_file." -y -f mjpeg -t 1 -s ".$pic_size." ".$pic_name;
+    $mkpic_command = "/usr/bin/ffmpeg -ss ".$video_time." -i ".$video_file." -y -f mjpeg -t 1 -r 1 -s ".$pic_size." ".$pic_name;
+    if($GLOBALS['able_webp']){
+        $mkpic_command = "/usr/bin/ffmpeg -ss ".$video_time." -i ".$video_file." -y -f webp -t 1 -r 1 -s ".$pic_size." ".$pic_name;
+    }
     if(!isExists(dirname($pic_name,1))){
         mkdir(iconv("UTF-8", "GBK", (dirname($pic_name,1))),0777,true); 
     }       
     //echo($mkpic_command."</br>");
-    if(!isExists($pic_name)){
+    if(!isExists($pic_name or $isFouce)){
         //echo ($mkpic_command."</br>");
         system($mkpic_command);
     }
 }
 
 //$mkpic_folder带路径
-function mkpicForFolder($mkpic_folder){
+function mkpicForFolder($mkpic_folder,$isFouce=FALSE){
     $save_path=$GLOBALS['data_path'];
     //echo ($save_path."</br>");
     $folder_name = md5(getFileName($mkpic_folder,TRUE));
@@ -144,13 +147,17 @@ function mkpicForFolder($mkpic_folder){
             mkdir(iconv("UTF-8", "GBK", ($save_path."/".$folder_name."/".$video_name)),0777,true); 
         }       
         //$video_name = formatSpace($video_name);
-        mkpic($mkpic_video,289,($save_path."/".$folder_name."/".$video_name."/".$video_name.".jpg"),'400*225');
+        if($GLOBALS['able_webp']){
+            mkpic($mkpic_video,289,($save_path."/".$folder_name."/".$video_name."/".$video_name.".webp"),'400*225',$isFouce);
+        } else{
+            mkpic($mkpic_video,289,($save_path."/".$folder_name."/".$video_name."/".$video_name.".jpg"),'400*225',$isFouce);
+        }
     }
 }
 
-function mkpicForRoot($root){
+function mkpicForRoot($root,$isFouce=FALSE){
     foreach(listRoot($root,FALSE) as $each_in_root_mix){
-        mkpicForFolder($each_in_root_mix);
+        mkpicForFolder($each_in_root_mix,$isFouce);
     }    
 }
 
@@ -158,17 +165,29 @@ function mkpicForRoot($root){
 function getVideoPic($file_path,$auto_mk=FALSE){
     $video_name_md5 = md5(getFileName($file_path));
     $folder_name = getFileName(dirname($file_path,1),TRUE);
-    $mkpic_pic_path = $GLOBALS['data_path']."/".md5($folder_name)."/".$video_name_md5."/".$video_name_md5.".jpg";
-    if(!isExists($GLOBALS['data_path']."/".md5($folder_name)."/".$video_name_md5."/".$video_name_md5.".jpg") && $auto_mk){
+    if($GLOBALS['able_webp']){
+        $mkpic_pic_path = $GLOBALS['data_path']."/".md5($folder_name)."/".$video_name_md5."/".$video_name_md5.".webp";
+    } else {
+        $mkpic_pic_path = $GLOBALS['data_path']."/".md5($folder_name)."/".$video_name_md5."/".$video_name_md5.".jpg";
+    }
+    if(!isExists($mkpic_pic_path) && $auto_mk){
         mkpic($GLOBALS['video_root_path']."/".$folder_name."/".getFileName($file_path),290,$mkpic_pic_path,'400*225');
     }
-    return ("./".getFileName($GLOBALS['data_path'],TRUE)."/".md5($folder_name)."/".$video_name_md5."/".$video_name_md5.".jpg");
+    if($GLOBALS['able_webp']){
+        return ("./".getFileName($GLOBALS['data_path'],TRUE)."/".md5($folder_name)."/".$video_name_md5."/".$video_name_md5.".webp");
+    } else {
+        return ("./".getFileName($GLOBALS['data_path'],TRUE)."/".md5($folder_name)."/".$video_name_md5."/".$video_name_md5.".jpg");
+    }
 }
 
 function getVideoPicFromMD5($md5){
     $parent_md5 = explode("-",$md5)[0];
     $video_md5 = explode("-",$md5)[1];
-    return ('./'.getFileName($GLOBALS['data_path'],TRUE).'/'.$parent_md5.'/'.$video_md5.'/'.$video_md5.'.jpg');
+    if($GLOBALS['able_webp']){
+        return ('./'.getFileName($GLOBALS['data_path'],TRUE).'/'.$parent_md5.'/'.$video_md5.'/'.$video_md5.'.webp');
+    } else {
+        return ('./'.getFileName($GLOBALS['data_path'],TRUE).'/'.$parent_md5.'/'.$video_md5.'/'.$video_md5.'.jpg');
+    }
 }
 
 //带路径
@@ -471,6 +490,7 @@ elseif($_GET['action']=='getCommentFromMD5'){
 elseif($_GET['action']=='test'){
     echo ("这是一个测试接口!</br>");
     //saveLastTime('3443dab0dcee781a18e927eb92a50740-e14822833a7c329477d6867001f241c2');
+    mkpicForRoot($GLOBALS['video_root_path'],TRUE);
     echo ("</br>输出结束!</br>");
 }
 

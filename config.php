@@ -4,6 +4,7 @@ global $data_path;
 global $version;
 global $web_users;
 global $able_cache;
+global $able_webp;
 $video_root_path=dirname(__FILE__).'/video';
 $data_path=dirname(__FILE__).'/data';
 $version = "Alpha 0.2.0";
@@ -15,7 +16,9 @@ $remote_addres = "apps.ystone.top";//留空则为访问时地址
 $authorization = FALSE;
 $root_username = "Yellowstone";//随便填
 $web_users=array('Yellowstone' => '12345678','user2' => 'password',);//账号,密码
-$api_authkey="";
+$api_authkey = "";
+$able_cache = TRUE;
+$able_webp = TRUE; //是否启用webp格式图片,启用后将获得更好性能但在某些老旧浏览器上将无法正常显示
 
 
 //其他设置
