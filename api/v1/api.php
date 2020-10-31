@@ -2,6 +2,12 @@
 include_once '../../function.php';
 
 
+function checkAuth($auth_key,$needKey){
+    if($needKey and !$auth_key==$GLOBALS['api_authkey']){
+        exit;
+    }
+}
+
 function xmlFormat($str){
 $str = str_replace("&", "&amp;", $str);
 $str = str_replace("<", "&lt;", $str);
@@ -94,8 +100,8 @@ function sendVideoFileFromMD5($md5){
 }
 
 
-
 if($_GET['action']=='library'){
+    checkAuth($_SERVER['HTTP_AUTHORIZATION'],$api_needkey);
     mkJsonIndexForRoot($GLOBALS['video_root_path']);
 
 } elseif($_GET['action']=='image'){
