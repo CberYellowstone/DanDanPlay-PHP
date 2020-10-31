@@ -12,14 +12,14 @@ if(!$authorization){
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="shortcut icon" href="css/icon.png" type="image/x-icon">
+	<link rel="shortcut icon" href="./css/icon.png" type="image/x-icon">
 	<title><?php include_once 'function.php';echo ($site_name); ?></title>
 	<link rel="stylesheet" href="./css/bootstrap.min.css">
 	<script src="js/jquery-3.5.1.min.js"></script>
 	<script src="./js/function.js"></script>
 	<style>
 		body {
-			background-image: url(./src/background.png);
+			background-image: url(./src/background.jpg);
 			background-attachment: fixed;
 			background-position: center;
 			background-repeat: no-repeat;
@@ -69,7 +69,7 @@ if(!$authorization){
 						<a class="nav-link" href="<?php include_once 'function.php';echo ($About_link); ?>" target="_blank">关于</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="https://github.com/CberYellowstone/DanDanPlay-PHP" target="_blank">Bug反馈</a>
+						<a class="nav-link" href="https://github.com/CberYellowstone/DanDanPlay-PHP/issues" target="_blank">Bug反馈</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="https://github.com/kaedei/dandanplay-libraryindex" target="_blank">帮助改进此页面</a>

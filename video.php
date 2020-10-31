@@ -87,7 +87,7 @@ if(!$authorization){
 						<a class="nav-link" href="<?php include_once 'function.php';echo ($About_link); ?>" target="_blank">关于</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="https://github.com/CberYellowstone/DanDanPlay-PHP" target="_blank">Bug反馈</a>
+						<a class="nav-link" href="https://github.com/CberYellowstone/DanDanPlay-PHP/issues" target="_blank">Bug反馈</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="https://github.com/kaedei/dandanplay-libraryindex" target="_blank">帮助改进此页面</a>

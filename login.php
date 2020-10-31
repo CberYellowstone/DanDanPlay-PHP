@@ -36,7 +36,7 @@ if(checkUserAndPasswordFromCookie($_COOKIE["Username"], $_COOKIE["Auth"]) and !$
 	<meta charset="UTF-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<link rel="shortcut icon" href="css/icon.png" type="image/x-icon" />
+	<link rel="shortcut icon" href="./css/icon.png" type="image/x-icon" />
 	<script src="./js/bootstrap.min.js"></script>
 	<script src="./js/jquery-3.5.1.min.js"></script>
 	<script src="./js/fontawesome.min.js"></script>
@@ -44,7 +44,7 @@ if(checkUserAndPasswordFromCookie($_COOKIE["Username"], $_COOKIE["Auth"]) and !$
 	<style type="text/css">
 		html,
 		body {
-			background-image: url(css/background.png);
+			background-image: url(./src/background.jpg);
 			background-size: cover;
 			background-repeat: no-repeat;
 			height: 100%;
