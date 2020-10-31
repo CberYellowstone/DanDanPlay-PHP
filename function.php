@@ -482,6 +482,13 @@ function mkCache($part){
     }
 }
 
+function clCache($uri){
+    @header("Cache-Control: no-cache, must-revalidate");
+    $filename = md5($uri);
+    $fileabs = dirname(__FILE__).'/cache/'.$filename;
+    unlink($fileabs);
+    @header('Location: '.$_SERVER['HTTP_REFERER']);
+}
 
 function checkUserAndPassword($web_username,$web_password){
     if(array_key_exists($web_username,$GLOBALS['web_users']) and $GLOBALS['web_users'][$web_username]==$web_password){
@@ -514,6 +521,9 @@ elseif($_GET['action']=='saveVideoInformation'){
 }
 elseif($_GET['action']=='getCommentFromMD5'){
     getCommentFromMD5($_GET['md5']);
+}
+elseif($_GET['action']=='clCache'){
+    clCache($_GET['uri']);
 }
 elseif($_GET['action']=='test'){
     echo ("这是一个测试接口!</br>");

@@ -1,4 +1,5 @@
 ﻿<?php include_once 'function.php';
+@header("Cache-Control: no-cache, must-revalidate");
 if($authorization and !checkUserAndPasswordFromCookie($_COOKIE["Username"], $_COOKIE["Auth"])) {
 	sendStatusCode(303, 'See Other', './login.php', 0);
 } 
@@ -88,8 +89,8 @@ mkCache(0);
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">远程访问</a>
 							<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-								<img class="dropdown-item" src='<?php include_once 'function.php'; echo('https://wenhairu.com/static/api/qr/?size=300&text={"about":"请使用支持弹弹play远程访问功能的客户端扫描此二维码","ip":["'.$remote_addres.'"],"port":'.$remote_port.',"machineName":"'.urljsonDecode($site_name).'","currentUser":"'.urljsonDecode($user_name).'","tokenRequired":false}');?>' width="300px" hight="300px">
-								<a class="dropdown-item" >请扫描二维码</a>
+							<img class="dropdown-item" src='<?php include_once 'function.php'; if($api_needkey){$key='true';}else{$key='false';};echo('https://wenhairu.com/static/api/qr/?size=300&text={"about":"请使用支持弹弹play远程访问功能的客户端扫描此二维码","ip":["'.$remote_addres.'"],"port":'.$remote_port.',"machineName":"'.urljsonDecode($site_name).'","currentUser":"'.urljsonDecode($user_name).'","tokenRequired":'.$key.'}');?>' width="300px" hight="300px">
+								<?php include_once 'function.php'; if(!$api_needkey){echo('<a class="dropdown-item" >请使用 弹弹Play概念版 扫描二维码</a>');}else{echo('<a class="dropdown-item" >当前需要密钥,二维码不可用,请手动输入</a><a class="dropdown-item" >IP地址: '.$remote_addres.'</a><a class="dropdown-item" >端口: '.$remote_port.'</a>');}?>
 							</div>
 						</li>
 
@@ -101,12 +102,13 @@ mkCache(0);
 								<a class="dropdown-item" href="https://github.com/kaedei/dandanplay-libraryindex" target="_blank">帮助改进此页面</a>
 							</div>
 						</li>
+
+						<?php if($GLOBALS['able_cache']){ echo('<li class="nav-item active"><a class="nav-link" href="./function.php?action=clCache&uri='.$_SERVER['REQUEST_URI'].'">刷新缓存</a></li>');} ?>
+
 				</ul>
 			</div>
 		</div>
 	</nav>
-
-	<img src='<?php include_once 'function.php'; echo('https://wenhairu.com/static/api/qr/?size=300&text={"about":"请使用支持弹弹play远程访问功能的客户端扫描此二维码","ip":["'.$remote_addres.'"],"port":'.$remote_port.',"machineName":"'.urljsonDecode($site_name).'","currentUser":"'.urljsonDecode($root_username).'","tokenRequired":false}');?>' id="qrcode_img" style='display:none;margin-left:auto;margin-right:auto;' width="300px" hight="300px">
 
 	<div class="container">
 		<nav aria-label="breadcrumb">
