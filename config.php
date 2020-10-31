@@ -2,7 +2,7 @@
 global $video_root_path, $data_path, $version, $web_users, $able_cache, $able_webp, $cache_limit, $api_authkey, $api_needkey;
 $video_root_path=dirname(__FILE__).'/video';
 $data_path=dirname(__FILE__).'/data';
-$version = "Alpha 0.2.0";
+$version = "Alpha 0.3.0";
 
 //用户设置
 $site_name = "Yellowstone's Anime Site"; //站点名称
