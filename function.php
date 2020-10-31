@@ -454,6 +454,34 @@ function getIfHTTPS(){
     }
 }
 
+function mkCache($part){
+    if($part==0) {
+        $filename = md5($_SERVER['REQUEST_URI']);
+        $fileabs = dirname(__FILE__).'/cache/'.$filename;
+        //查找有没有缓存文件的存在
+        if(!$_POST and $GLOBALS['able_cache']) {
+            if(file_exists($fileabs)) {
+                $now_time = time();
+                $last_time = filemtime($fileabs);
+                if(($now_time-$last_time) / 60 > $GLOBALS['cache_limit']) {
+                    unlink($fileabs);
+                } else {include $fileabs;exit;}
+            } ob_start();
+        }
+    } elseif($part==1) {
+        if(!$_POST and $GLOBALS['able_cache']){
+            $filename = md5($_SERVER['REQUEST_URI']);
+            $fileabs = dirname(__FILE__).'/cache/'.$filename;    
+            $content = ob_get_contents();
+            $fp = fopen($fileabs, 'wb+');
+            fwrite($fp, $content);fclose($fp);
+            ob_flush(); //从PHP内存中释放出来缓存（取出数据）
+            flush(); //把释放的数据发送到浏览器显示
+            ob_end_clean(); //清空缓冲区的内容并关闭这个缓冲区
+        }
+    }
+}
+
 
 function checkUserAndPassword($web_username,$web_password){
     if(array_key_exists($web_username,$GLOBALS['web_users']) and $GLOBALS['web_users'][$web_username]==$web_password){
@@ -490,7 +518,6 @@ elseif($_GET['action']=='getCommentFromMD5'){
 elseif($_GET['action']=='test'){
     echo ("这是一个测试接口!</br>");
     //saveLastTime('3443dab0dcee781a18e927eb92a50740-e14822833a7c329477d6867001f241c2');
-    mkpicForRoot($GLOBALS['video_root_path'],TRUE);
     echo ("</br>输出结束!</br>");
 }
 

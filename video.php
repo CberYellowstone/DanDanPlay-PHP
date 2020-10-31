@@ -6,6 +6,7 @@ if(!$authorization){
 	setcookie("Username",'',time()-1);
 	setcookie("Auth",'', time()-1);
 }
+mkCache(0);
 ?>
 
 <!DOCTYPE html>
@@ -185,3 +186,4 @@ if(!$authorization){
 	<?php include_once 'function.php';saveLastTime($_GET['video']); ?>
 </body>
 </html>
+<?php include_once 'function.php';mkCache(1); ?>

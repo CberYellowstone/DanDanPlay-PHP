@@ -6,30 +6,7 @@ if(!$authorization){
 	setcookie("Username",'',time()-1);
 	setcookie("Auth",'', time()-1);
 }
-
-
-//文件名
-$filename = "index.html";
-$fileabs = dirname(__FILE__).'/cache/'.$filename;
-
-//查找有没有缓存文件的存在
-if(!$_GET and !$_POST and $able_cache){
-	if (file_exists($fileabs)) {
-		//有缓存文件直接调用
-		include $fileabs;
-		//获取当前时间戳
-		$now_time = time();
-		//获取缓存文件时间戳
-		$last_time = filemtime($fileabs);
-		//如果缓存文件生成超过指定的时间直接删除文件
-		if (($now_time - $last_time) / 60 > 30) {
-			unlink($fileabs);
-		}
-		exit;
-	}
-	//开启缓存
-	ob_start();
-}
+mkCache(0);
 ?>
 
 
@@ -142,15 +119,5 @@ if(!$_GET and !$_POST and $able_cache){
 </html>
 
 <?php
-if(!$_GET and !$_POST){
-	//在文件代码末尾获取上面生成的缓存内容
-	$content = ob_get_contents();
-	//写入到缓存内容到指定的文件夹
-	$fp = fopen($fileabs, 'wb+');
-	fwrite($fp, $content);
-	fclose($fp);
-	ob_flush(); //从PHP内存中释放出来缓存（取出数据）
-	flush(); //把释放的数据发送到浏览器显示
-	ob_end_clean(); //清空缓冲区的内容并关闭这个缓冲区
-}
+mkCache(1);
 ?>

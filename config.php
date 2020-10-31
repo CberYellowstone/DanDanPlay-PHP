@@ -1,10 +1,5 @@
 <?php
-global $video_root_path;
-global $data_path;
-global $version;
-global $web_users;
-global $able_cache;
-global $able_webp;
+global $video_root_path, $data_path, $version, $web_users, $able_cache, $able_webp, $cache_limit;
 $video_root_path=dirname(__FILE__).'/video';
 $data_path=dirname(__FILE__).'/data';
 $version = "Alpha 0.2.0";
@@ -18,6 +13,7 @@ $root_username = "Yellowstone";//随便填
 $web_users=array('Yellowstone' => '12345678','user2' => 'password',);//账号,密码
 $api_authkey = "";
 $able_cache = TRUE;
+$cache_limit = 60; //缓存过期时间,单位为分钟
 $able_webp = TRUE; //是否启用webp格式图片,启用后将获得更好性能但在某些老旧浏览器上将无法正常显示
 
 
