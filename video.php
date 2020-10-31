@@ -19,7 +19,7 @@ if(!$authorization){
 	<link href="./css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="./css/DPlayer.min.css">
 	<script src="./js/DPlayer.min.js"></script>
-	<script src="./js/function.js"></script>
+	<!-- <script src="./js/function.js"></script> -->
 	<style type="text/css">
 		/* ReSharper disable InvalidValue */
 		/* ReSharper disable CssNotResolved */
@@ -83,18 +83,23 @@ if(!$authorization){
 						<a class="nav-link" href="./">首页</a>
 					</li>
 					<?php include_once 'function.php';if($_COOKIE["Username"]!=''){echo('<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.$_COOKIE["Username"].'</a><div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink"><a class="dropdown-item" href="./login.php?logout=true">注销登录</a></div></li>');} ?>
-					<li class="nav-item">
-						<a class="nav-link" href="<?php include_once 'function.php';echo ($About_link); ?>" target="_blank">关于</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="https://github.com/CberYellowstone/DanDanPlay-PHP/issues" target="_blank">Bug反馈</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="https://github.com/kaedei/dandanplay-libraryindex" target="_blank">帮助改进此页面</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" id="qrcode" onclick="switchqrcode();">远程访问</a>
-					</li>
+
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">远程访问</a>
+							<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+								<img class="dropdown-item" src='<?php include_once 'function.php'; echo('https://wenhairu.com/static/api/qr/?size=300&text={"about":"请使用支持弹弹play远程访问功能的客户端扫描此二维码","ip":["'.$remote_addres.'"],"port":'.$remote_port.',"machineName":"'.urljsonDecode($site_name).'","currentUser":"'.urljsonDecode($user_name).'","tokenRequired":false}');?>' width="300px" hight="300px">
+								<a class="dropdown-item" >请扫描二维码</a>
+							</div>
+						</li>
+
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">关于</a>
+							<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+								<a class="dropdown-item" href="<?php include_once 'function.php';echo ($About_link); ?>" target="_blank">GitHub</a>
+								<a class="dropdown-item" href="<?php include_once 'function.php';echo ($About_link.'/issues'); ?>" target="_blank">Bug反馈</a>
+								<a class="dropdown-item" href="https://github.com/kaedei/dandanplay-libraryindex" target="_blank">帮助改进此页面</a>
+							</div>
+						</li>
 				</ul>
 			</div>
 		</div>
