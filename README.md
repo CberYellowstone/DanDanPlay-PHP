@@ -1,3 +1,5 @@
+# 招募！急需前端人才。有能力者请开新的issue
+
 # DanDanPlay-PHP
 
 基于 PHP 重构的 [弹弹Play远程访问首页](https://github.com/kaedei/dandanplay-libraryindex)（包含 媒体库内容的展示、视频播放、弹幕以及远程访问）
