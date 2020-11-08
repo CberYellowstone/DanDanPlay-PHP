@@ -1,5 +1,6 @@
 <?php
 include_once '../../function.php';
+@header("Cache-Control: no-cache, must-revalidate");
 
 
 function checkAuth($auth_key,$needKey){
