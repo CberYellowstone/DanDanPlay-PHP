@@ -9,46 +9,91 @@ function checkRefer($source=0){
     }
 }
 
-if(!$_GET['step']){
-    echo('正在准备执行任务');
-    @header("refresh:1;url=./do.php?step=1");
-} elseif($_GET['step']==1){
-    checkRefer();
-    echo('正在生成视频缩略图...');
-    @header("refresh:1;url=./do.php?step=1.5");
-} elseif($_GET['step']==1.5){
-    checkRefer();
-    mkpicForRoot($video_root_path);
-    @header("refresh:1;url=./do.php?step=2");
-} elseif($_GET['step']==2){
-    checkRefer();
-    echo('正在识别番剧...');
-    @header("refresh:1;url=./do.php?step=2.5");
-} elseif($_GET['step']==2.5){
-    checkRefer();
-    saveVideoInformationForRoot($video_root_path);
-    @header("refresh:1;url=./do.php?step=3");
-} elseif($_GET['step']==3){
-    checkRefer();
-    echo('正在获取弹幕...');
-    @header("refresh:1;url=./do.php?step=3.5");
-} elseif($_GET['step']==3.5){
-    checkRefer();
-    downloadCommentForRoot($video_root_path);
-    @header("refresh:1;url=./do.php?step=4");
-} elseif($_GET['step']==4){
-    checkRefer();
-    echo('任务完成');
-} 
+function mkContainer($str){
+    echo('<div class="container">'.$str.'</div>');
+}
 
-
-exit();
-mkpicForRoot($video_root_path);
-saveVideoInformationForRoot($video_root_path);
-downloadCommentForRoot($video_root_path);
-
-echo("任务完成");
-
-
-
+function doTask(){
+    if(!$_GET['step']){
+        mkContainer('正在准备执行任务');
+        @header("refresh:1;url=./do.php?step=1");
+    } elseif($_GET['step']==1){
+        checkRefer();
+        mkContainer('正在生成视频缩略图...');
+        @header("refresh:1;url=./do.php?step=1.5");
+    } elseif($_GET['step']==1.5){
+        checkRefer();
+        mkpicForRoot($GLOBALS['video_root_path']);
+        @header("refresh:1;url=./do.php?step=2");
+    } elseif($_GET['step']==2){
+        checkRefer();
+        mkContainer('正在识别番剧...');
+        @header("refresh:1;url=./do.php?step=2.5");
+    } elseif($_GET['step']==2.5){
+        checkRefer();
+        saveVideoInformationForRoot($GLOBALS['video_root_path']);
+        @header("refresh:1;url=./do.php?step=3");
+    } elseif($_GET['step']==3){
+        checkRefer();
+        mkContainer('正在获取弹幕...');
+        @header("refresh:1;url=./do.php?step=3.5");
+    } elseif($_GET['step']==3.5){
+        checkRefer();
+        downloadCommentForRoot($GLOBALS['video_root_path']);
+        @header("refresh:1;url=./do.php?step=4");
+    } elseif($_GET['step']==4){
+        checkRefer();
+        mkContainer('<a id="cttx">任务完成</a></br></br></br></br><a href="./do.php" id="cttx">重新执行</a>');
+    } 
+}
 ?>
+
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="shortcut icon" href="./css/icon.png" type="image/x-icon">
+        <title>执行任务中...</title>
+        <style>
+            html {
+                padding: 50px 10px;
+                font-size: 16px;
+                line-height: 1.4;
+                color: #666;
+                background: #F6F6F3;
+                -webkit-text-size-adjust: 100%;
+                -ms-text-size-adjust: 100%;
+            }
+
+            html,
+            input { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+            body {
+                max-width: 500px;
+                _width: 500px;
+                padding: 30px 20px;
+                margin: 0 auto;
+                background: #FFF;
+            }
+            ul {
+                padding: 0 0 0 40px;
+            }
+            .container {
+                max-width: 380px;
+                _width: 380px;
+                margin: 0 auto;
+            }
+            #cttx {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        </style>
+    </head>
+    <body>
+        <?php doTask(); ?>
+    </body>
+</html>
+
+
