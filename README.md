@@ -1,6 +1,6 @@
 # 招募！急需前端人才。有能力者请开新的issue
 
-![DanDanPlay-PHP](https://socialify.git.ci/CberYellowstone/DanDanPlay-PHP/image?description=1&font=KoHo&forks=1&issues=1&language=1&logo=https%3A%2F%2Fapps.ystone.top%3A488%2Fddp%2Fsrc%2Fddp-black.png&owner=1&pattern=Brick%20Wall&pulls=1&stargazers=1&theme=Dark)
+![DanDanPlay-PHP](https://socialify.git.ci/CberYellowstone/DanDanPlay-PHP/image?description=1&font=KoHo&forks=1&issues=1&language=1&logo=https://cdn.jsdelivr.net/gh/CberYellowstone/DanDanPlay-PHP@master/src/ddp-black.png&owner=1&pattern=Brick%20Wall&pulls=1&stargazers=1&theme=Dark)
 
 # DanDanPlay-PHP
 
