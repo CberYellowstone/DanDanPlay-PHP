@@ -1,5 +1,7 @@
 # 招募！急需前端人才。有能力者请开新的issue
 
+![DanDanPlay-PHP](https://socialify.git.ci/CberYellowstone/DanDanPlay-PHP/image?description=1&font=KoHo&forks=1&issues=1&language=1&logo=https%3A%2F%2Fapps.ystone.top%3A488%2Fddp%2Fsrc%2Fddp-black.png&owner=1&pattern=Brick%20Wall&pulls=1&stargazers=1&theme=Dark)
+
 # DanDanPlay-PHP
 
 基于 PHP 重构的 [弹弹Play远程访问首页](https://github.com/kaedei/dandanplay-libraryindex)（包含 媒体库内容的展示、视频播放、弹幕以及远程访问）
@@ -113,4 +115,4 @@ PHP版本要求： `PHP 7+` ，个人部署环境是 `PHP7.4` ，理论上更低
 hanzi-convert](https://github.com/uutool/hanzi-convert)
 
 ## 感谢
->感谢 [@kaedei](https://github.com/kaedei) 大佬的指教， 使我修完了最后的屎山bug
+> [@kaedei](https://github.com/kaedei)
