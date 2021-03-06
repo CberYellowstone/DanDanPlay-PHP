@@ -14,7 +14,7 @@ $web_users=array('Yellowstone' => '12345678','user2' => 'password',);//网页用
 $api_needkey = FALSE; //远程访问是否需要密钥
 $api_authkey = "12345678"; //远程访问密钥
 $able_cache = TRUE; //是否启用缓存
-$cache_limit = 60; //缓存过期时间,单位为分钟
+$cache_limit = 60 * 24 * 7; //缓存过期时间,单位为分钟
 $able_webp = TRUE; //是否启用webp格式图片,启用后将获得更好性能但在某些老旧浏览器上将无法正常显示
 
 
