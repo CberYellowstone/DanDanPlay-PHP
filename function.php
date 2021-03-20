@@ -197,7 +197,11 @@ function getFileMD5($file_path){
 
 function echoServerInformation(){
     date_default_timezone_set("Asia/Shanghai");
-    echo "DanDanPlay-PHP版本：".$GLOBALS['version']." | 服务器PHP版本：".PHP_VERSION." | 当前服务器时间: ".date('Y/m/d H:i:s', time());
+    if($GLOBALS['able_cache']){
+        echo "DanDanPlay-PHP版本：".$GLOBALS['version']." | 服务器PHP版本：".PHP_VERSION." | 缓存文件日期: ".date('Y/m/d H:i:s', time());
+    } else {
+        echo "DanDanPlay-PHP版本：".$GLOBALS['version']." | 服务器PHP版本：".PHP_VERSION." | 当前服务器时间: ".date('Y/m/d H:i:s', time());
+    }
 }
 
 function getVideoTime($file_path,$isOutSecond=FALSE){

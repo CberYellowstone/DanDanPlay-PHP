@@ -74,7 +74,7 @@ mkCache(0);
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">远程访问</a>
 							<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-								<img class="dropdown-item" src='<?php include_once 'function.php'; if($api_needkey){$key='true';}else{$key='false';};echo('https://wenhairu.com/static/api/qr/?size=300&text={"about":"请使用支持弹弹play远程访问功能的客户端扫描此二维码","ip":["'.$remote_addres.'"],"port":'.$remote_port.',"machineName":"'.urljsonDecode($site_name).'","currentUser":"'.urljsonDecode($user_name).'","tokenRequired":'.$key.'}');?>' width="300px" hight="300px">
+								<img class="dropdown-item" src='<?php include_once 'function.php'; if($api_needkey){$key='true';}else{$key='false';};echo('https://wenhairu.com/static/api/qr/?size=300&text={"about":"请使用支持弹弹Play远程访问功能的客户端扫描此二维码","ip":["'.$remote_addres.'"],"port":'.$remote_port.',"machineName":"'.urljsonDecode($site_name).'","currentUser":"'.urljsonDecode($user_name).'","tokenRequired":'.$key.'}');?>' width="300px" hight="300px">
 									<?php include_once 'function.php'; if(!$api_needkey){echo('<a class="dropdown-item" >请使用 弹弹Play概念版 扫描二维码</a>');}else{echo('<a class="dropdown-item" >当前需要密钥,二维码不可用,请手动输入</a><a class="dropdown-item" >IP地址: '.$remote_addres.'</a><a class="dropdown-item" >端口: '.$remote_port.'</a>');}?>
 
 							</div>
@@ -111,7 +111,7 @@ mkCache(0);
 		<div class=" col-md-9 col-xs-12 float-left transform">
 		<?php include_once 'function.php';mkCardForRoot($video_root_path,$_GET['animeName'],$_POST['q']);?>
 			<div class="col-12 float-right text-center pt-5">
-				<p><?php include_once 'function.php';echo ($site_name."由 弹弹play 提供部分支持.</br>");echoServerInformation()?></p>
+				<p><?php include_once 'function.php';echo ($site_name." | Base on 弹弹PlayAPI.</br>");echoServerInformation()?></p>
 				<p></p>
 			</div>
 		</div>

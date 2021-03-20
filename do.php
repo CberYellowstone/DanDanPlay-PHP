@@ -42,8 +42,8 @@ function doTask(){
         downloadCommentForRoot($GLOBALS['video_root_path']);
         @header("refresh:1;url=./do.php?step=4");
     } elseif($_GET['step']==4){
-        checkRefer();
-        mkContainer('<a id="cttx">任务完成</a></br></br></br></br><a href="./do.php" id="cttx">重新执行</a>');
+        //checkRefer();
+        mkContainer('<a id="cttx">任务完成</a></br></br> <div style="text-align: center"> <a id="jump" href="./do.php" id="cttx">重新执行</a><a>&#12288&#12288</a><a id="jump" href="./" id="cttx">返回主页</a> </div>');
     } 
 }
 ?>
