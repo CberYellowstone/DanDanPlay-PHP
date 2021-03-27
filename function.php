@@ -487,11 +487,13 @@ function mkCache($part){
 }
 
 function clCache($uri){
-    @header("Cache-Control: no-cache, must-revalidate");
-    $filename = md5($uri);
-    $fileabs = dirname(__FILE__).'/cache/'.$filename;
-    unlink($fileabs);
-    @header('Location: '.$_SERVER['HTTP_REFERER']);
+    if($_POST['clCache']){
+        @header("Cache-Control: no-cache, must-revalidate");
+        $filename = md5($uri);
+        $fileabs = dirname(__FILE__).'/cache/'.$filename;
+        unlink($fileabs);
+        @header('Location: '.$_SERVER['REQUEST_URI']);
+    }
 }
 
 function checkUserAndPassword($web_username,$web_password){
@@ -527,7 +529,7 @@ elseif($_GET['action']=='getCommentFromMD5'){
     getCommentFromMD5($_GET['md5']);
 }
 elseif($_GET['action']=='clCache'){
-    clCache($_GET['uri']);
+    @header("Location: ./");
 }
 elseif($_GET['action']=='test'){
     echo ("这是一个测试接口!</br>");

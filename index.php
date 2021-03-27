@@ -7,6 +7,7 @@ if(!$authorization){
 	setcookie("Username",'',time()-1);
 	setcookie("Auth",'', time()-1);
 }
+clCache($_SERVER['REQUEST_URI']);
 mkCache(0);
 ?>
 
@@ -89,7 +90,12 @@ mkCache(0);
 							</div>
 						</li>
 
-						<?php if($GLOBALS['able_cache']){ echo('<li class="nav-item active"><a class="nav-link" href="./function.php?action=clCache&uri='.$_SERVER['REQUEST_URI'].'">刷新缓存</a></li>');} ?>
+						<form id="_form" method="post" action="<?php echo (((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) ? 'https://' : 'http://').$_SERVER['SERVER_NAME'] . ':' . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"]; ?>">
+						<input type="hidden" name="clCache" value="true" />
+						</form>
+						<?php if($GLOBALS['able_cache']){ echo('<li class="nav-item active"><a class="nav-link" onclick="document.getElementById(\'_form\').submit();">清除缓存</a></li>');} ?>
+	
+
 
 				</ul>
 				<form class="form-inline my-2 my-lg-0" method="POST" action="./">
