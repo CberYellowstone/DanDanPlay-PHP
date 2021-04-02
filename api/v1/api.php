@@ -104,7 +104,9 @@ function sendVideoFileFromMD5($md5){
 
 if($_GET['action']=='library'){
     checkAuth($_SERVER['HTTP_AUTHORIZATION'],$api_needkey);
+    mkCache(0);
     mkJsonIndexForRoot($GLOBALS['video_root_path']);
+    mkCache(1);
 
 } elseif($_GET['action']=='image'){
     sendVideoPicFromMD5($_GET['id']);
