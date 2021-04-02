@@ -62,6 +62,7 @@ function mkJsonIndexForFolder($folder_path){
         $video_path = $video_information_list['file_path'];
         $video_parent_path_md5 = md5(getFileName(dirname($video_path),TRUE));
         $video_file_md5 = md5(getFileName($video_path));
+        $video_path = str_replace('/','\\',$video_path);
         $video_path = str_replace('\\','\\\\',$video_path);
         //$last_time = readLastTime($each_video_path);
         //echo ($video_file_md5."</br>");
