@@ -1,8 +1,10 @@
 <?php
-global $video_root_path, $data_path, $version, $web_users, $able_cache, $able_webp, $cache_limit, $api_authkey, $api_needkey;
+global $video_root_path, $data_path, $version, $web_users, $able_cache, $able_webp, $cache_limit, $api_authkey, $api_needkey, $remote_port, $remote_addres;
 $video_root_path=dirname(__FILE__).'/video';
 $data_path=dirname(__FILE__).'/data';
 $version = "Alpha 0.3.0";
+$About_link = "https://github.com/CberYellowstone/DanDanPlay-PHP";
+
 
 //用户设置
 $site_name = "Yellowstone's Anime Site"; //站点名称
@@ -21,7 +23,6 @@ $able_webp = TRUE; //是否启用webp格式图片,启用后将获得更好性能
 //其他设置
 $DanmakuArea = "83%";
 $DanmakuDurationCss = "danmaku 9s linear";
-$About_link = "https://github.com/CberYellowstone/DanDanPlay-PHP";
 
 
 if(!$remote_addres){$remote_addres = $_SERVER['SERVER_NAME'];}
