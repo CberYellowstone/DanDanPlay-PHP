@@ -1,4 +1,4 @@
-# ~~之后一定小规模重构~~
+# ~~之后的之后一定小规模重构~~
 
 ![DanDanPlay-PHP](https://socialify.git.ci/CberYellowstone/DanDanPlay-PHP/image?description=1&descriptionEditable=DanDanPlay%20%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE%20%E7%9A%84%20PHP%20%E5%AE%9E%E7%8E%B0%E7%89%88%E6%9C%AC&font=Raleway&forks=1&issues=1&logo=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2FCberYellowstone%2FDanDanPlay-PHP%40master%2Fsrc%2Fddp-black.png&pattern=Brick%20Wall&pulls=1&stargazers=1&theme=Dark)
 
@@ -24,7 +24,7 @@ PHP版本要求： `PHP 7+` ，支持 `PHP 8.x`，个人部署环境是 `PHP7.4`
 
 ## 说明
 
-* 访问 `do.php` 可以实现刷新主页，添加新番之后需要访问一次 `do.php` （可以添加到 crontab ）
+* 访问 `do.php` 可以实现刷新主页，添加新番之后需要访问一次 `do.php` （可以添加到 Crontab ）
 * 里面还有部分的测试用语句，不影响性能和使用，介意的话自己删掉就行
 
 
@@ -34,8 +34,22 @@ PHP版本要求： `PHP 7+` ，支持 `PHP 8.x`，个人部署环境是 `PHP7.4`
 >配置文件 `config.php` 以及 `/api/v1/config.php` ，使用前请自行更改相关参数
 >
 >**包含**番剧视频文件的 **文件夹** 需放在 `/video` 目录下，可用 **番剧目录** 的软链接代替，
->> e.g. `/video/来自风平浪静的明天/[ktxp][Nagi_No_Asukara][01][720p][GB].mp4`
->
+>> e.g.
+>>
+>>```
+>>video
+>>|
+>>└───来自风平浪静的明天
+>>│   │   [ktxp][Nagi_No_Asukara][01][720p][GB].mp4
+>>│   │   [ktxp][Nagi_No_Asukara][02][720p][GB].mp4
+>>│   │   ...
+>>│    
+>>└───末日时在做什么？有没有空？可以来拯救吗？
+>>    │   [KxIX]Shuumatsu Na...Moratte Ii Desuka 01[GB][1080P].mp4
+>>    │   [KxIX]Shuumatsu Na...Moratte Ii Desuka 02[GB][1080P].mp4
+>>    │   ...
+>>```
+>>
 >但是 链接/目录名 要和标准中文译名（完全）一致（可从 弹弹Play 复制）
 >>下一步将计划改进为随意命名
 >
@@ -52,7 +66,7 @@ PHP版本要求： `PHP 7+` ，支持 `PHP 8.x`，个人部署环境是 `PHP7.4`
  
 ### 远程访问 API 功能：
 
->需开启 Apache 的 rewrite 功能，方法请自行百度，已经内置 `.htaccess` 文件。
+>需开启 Apache 的 ReWrite 功能，方法请自行百度，已经内置 `.htaccess` 文件。
 >
 >Nginx 用户请自己摸索适配（我相信你们都是大佬）,主要是我也不用 Nginx
 >
@@ -64,7 +78,11 @@ PHP版本要求： `PHP 7+` ，支持 `PHP 8.x`，个人部署环境是 `PHP7.4`
 >此外，远程访问 所使用的域名需占用整个域名，不得安装在二级目录下
 >>e.p. 主站用 `https://xxx.xxx.xxx/ddp` 是可以的
 >>
->>但是， 远程访问的 API 地址格式必须为 `http://xxx.xxx.xxx/`
+>>但是， 远程访问的 API 地址格式 **必须** 为 `http://xxx.xxx.xxx/`
+>>
+>>由于弹弹Play概念版自身的问题，番剧的排序会有误，但是本程序已主动适配以规避该错误 
+>>
+>>若用户开启了缓存功能，那么打开远程访问界面右上角的遥控器将会触发清除缓存功能
 
 ---
 ### 搜索功能:
