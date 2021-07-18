@@ -58,6 +58,7 @@ function mkJsonIndexForFolder($folder_path){
         //print_r(getVideoInformation($each_video_path)[1].'</br>');
         $animeTitle = removeQuote($video_information_list['animeTitle']);
         $episodeTitle = removeQuote($video_information_list['episodeTitle']);
+        $episodeTitle = str_replace(['第1话','第2话','第3话','第4话','第5话','第6话','第7话','第8话','第9话'],['第01话','第02话','第03话','第04话','第05话','第06话','第07话','第08话','第09话'],$episodeTitle);
         $animeId = $video_information_list['animeId'];
         $episodeId = $video_information_list['episodeId'];
         $video_path = $video_information_list['file_path'];
@@ -103,18 +104,29 @@ function sendVideoFileFromMD5($md5){
 }
 
 
-if($_GET['action']=='library'){
-    checkAuth($_SERVER['HTTP_AUTHORIZATION'],$api_needkey);
-    mkCache(0);
-    mkJsonIndexForRoot($GLOBALS['video_root_path']);
-    mkCache(1);
-
-} elseif($_GET['action']=='image'){
-    sendVideoPicFromMD5($_GET['id']);
-    
-} elseif($_GET['action']=='stream'){
-    sendVideoFileFromMD5($_GET['id']);
-
-} elseif($_GET['action']=='comment'){
-    sendCommentFromMD5($_GET['id']);
+switch($_GET['action']){
+    case "library":
+        checkAuth($_SERVER['HTTP_AUTHORIZATION'],$api_needkey);
+        mkCache(0);
+        mkJsonIndexForRoot($GLOBALS['video_root_path']);
+        mkCache(1);
+        break;
+    case "image":
+        sendVideoPicFromMD5($_GET['id']);
+        break;
+    case "stream":
+        sendVideoFileFromMD5($_GET['id']);
+        break;
+    case "comment":
+        sendCommentFromMD5($_GET['id']);
+    case "clcache":
+        $filename = md5("/api/v1/library");
+        $fileabs = dirname(__FILE__,3).'/cache/'.$filename;
+        echo($fileabs);
+        unlink($fileabs);
+        break;
 }
+
+
+
+?>
