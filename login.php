@@ -32,7 +32,7 @@ if(checkUserAndPasswordFromCookie($_COOKIE["Username"], $_COOKIE["Auth"]) and !$
 <html lang="zh-CN">
 
 <head>
-	<title><?php include_once 'function.php';echo ($site_name); ?></title>
+	<title><?php echo ($site_name); ?></title>
 	<meta charset="UTF-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -119,8 +119,7 @@ if(checkUserAndPasswordFromCookie($_COOKIE["Username"], $_COOKIE["Auth"]) and !$
 		<div class="d-flex justify-content-center h-100">
 			<div class="card">
 				<div class="card-header text-center">
-					<h4>登录<?php include_once 'function.php';
-							echo ($site_name); ?></h4>
+					<h4>登录<?php echo ($site_name); ?></h4>
 				</div>
 				<div class="card-body">
 					<form method="post">
