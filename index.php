@@ -19,7 +19,7 @@ mkCache(0);
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="shortcut icon" href="./css/icon.png" type="image/x-icon">
-	<title><?php include_once 'function.php';echo ($site_name); ?></title>
+	<title><?php echo ($site_name); ?></title>
 	<link rel="stylesheet" href="./css/bootstrap.min.css">
 	<script src="js/jquery-3.5.1.min.js"></script>
 	<!-- <script src="./js/function.js"></script> -->
@@ -61,7 +61,7 @@ mkCache(0);
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container">
-			<a class="navbar-brand" href="#"><?php include_once 'function.php';echo ($site_name); ?></a>
+			<a class="navbar-brand" href="#"><?php echo ($site_name); ?></a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -70,13 +70,13 @@ mkCache(0);
 					<li class="nav-item active">
 						<a class="nav-link" href="./">首页</a>
 					</li>
-					<?php include_once 'function.php';if($_COOKIE["Username"]!=''){echo('<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.$_COOKIE["Username"].'</a><div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink"><a class="dropdown-item" href="./login.php?logout=true">注销登录</a></div></li>');} ?>
+					<?php if($_COOKIE["Username"]!=''){echo('<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.$_COOKIE["Username"].'</a><div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink"><a class="dropdown-item" href="./login.php?logout=true">注销登录</a></div></li>');} ?>
 
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">远程访问</a>
 							<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-								<img class="dropdown-item" src='<?php include_once 'function.php'; if($api_needkey){$key='true';}else{$key='false';};echo('https://wenhairu.com/static/api/qr/?size=300&text={"about":"请使用支持弹弹Play远程访问功能的客户端扫描此二维码","ip":["'.$remote_addres.'"],"port":'.$remote_port.',"machineName":"'.urljsonDecode($site_name).'","currentUser":"'.urljsonDecode($user_name).'","tokenRequired":'.$key.'}');?>' width="300px" hight="300px">
-									<?php include_once 'function.php'; if(!$api_needkey){echo('<a class="dropdown-item" >请使用 弹弹Play概念版 扫描二维码</a>');}else{echo('<a class="dropdown-item" >当前需要密钥,二维码不可用,请手动输入</a><a class="dropdown-item" >IP地址: '.$remote_addres.'</a><a class="dropdown-item" >端口: '.$remote_port.'</a>');}?>
+								<img class="dropdown-item" src='<?php  if($api_needkey){$key='true';}else{$key='false';};echo('https://wenhairu.com/static/api/qr/?size=300&text={"about":"请使用支持弹弹Play远程访问功能的客户端扫描此二维码","ip":["'.$remote_addres.'"],"port":'.$remote_port.',"machineName":"'.urljsonDecode($site_name).'","currentUser":"'.urljsonDecode($user_name).'","tokenRequired":'.$key.'}');?>' width="300px" hight="300px">
+									<?php  if(!$api_needkey){echo('<a class="dropdown-item" >请使用 弹弹Play概念版 扫描二维码</a>');}else{echo('<a class="dropdown-item" >当前需要密钥,二维码不可用,请手动输入</a><a class="dropdown-item" >IP地址: '.$remote_addres.'</a><a class="dropdown-item" >端口: '.$remote_port.'</a>');}?>
 
 							</div>
 						</li>
@@ -84,8 +84,8 @@ mkCache(0);
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">关于</a>
 							<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-								<a class="dropdown-item" href="<?php include_once 'function.php';echo ($About_link); ?>" target="_blank">GitHub</a>
-								<a class="dropdown-item" href="<?php include_once 'function.php';echo ($About_link.'/issues'); ?>" target="_blank">Bug反馈</a>
+								<a class="dropdown-item" href="<?php echo ($About_link); ?>" target="_blank">GitHub</a>
+								<a class="dropdown-item" href="<?php echo ($About_link.'/issues'); ?>" target="_blank">Bug反馈</a>
 								<a class="dropdown-item" href="https://github.com/kaedei/dandanplay-libraryindex" target="_blank">帮助改进此页面</a>
 							</div>
 						</li>
@@ -110,14 +110,14 @@ mkCache(0);
 		<div class="col-md-3 col-xs-12 float-left nobords">
 			<div class="list-group  li">
 				<a href="" class="list-group-item list-group-item-action active rounded-0 line-limit-length">作品列表</a>
-				<?php include_once 'function.php';listRoot($video_root_path,TRUE,$_GET['animeName']);?>
+				<?php listRoot($video_root_path,TRUE,$_GET['animeName']);?>
 				<a href="./" class="list-group-item list-group-item-action active rounded-0 line-limit-length">返回首页</a>
 			</div>
 		</div>
 		<div class=" col-md-9 col-xs-12 float-left transform">
-		<?php include_once 'function.php';mkCardForRoot($video_root_path,$_GET['animeName'],$_POST['q']);?>
+		<?php mkCardForRoot($video_root_path,$_GET['animeName'],$_POST['q']);?>
 			<div class="col-12 float-right text-center pt-5">
-				<p><?php include_once 'function.php';echo ($site_name." | Base on 弹弹PlayAPI.</br>");echoServerInformation()?></p>
+				<p><?php echo ($site_name." | Base on 弹弹PlayAPI.</br>");echoServerInformation()?></p>
 				<p></p>
 			</div>
 		</div>

@@ -18,7 +18,7 @@ mkCache(0);
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title><?php include_once 'function.php';echo (removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['animeTitle'])." - ".removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['episodeTitle'])." - ".$site_name); ?></title>
+	<title><?php echo (removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['animeTitle'])." - ".removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['episodeTitle'])." - ".$site_name); ?></title>
 	<link rel="shortcut icon" href="./css/icon.png" type="image/x-icon">
 	<link href="./css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="./css/DPlayer.min.css">
@@ -36,12 +36,12 @@ mkCache(0);
 
 		.dplayer-danmaku {
 			font-size: 25px;
-			height: <?php include_once 'function.php';echo ($DanmakuArea); ?> ;
+			height: <?php echo ($DanmakuArea); ?> ;
 		}
 
 			.dplayer-danmaku .dplayer-danmaku-right.dplayer-danmaku-move {
-				-webkit-animation: <?php include_once 'function.php';echo ($DanmakuDurationCss); ?> ;
-				animation: <?php include_once 'function.php';echo ($DanmakuDurationCss); ?> ;
+				-webkit-animation: <?php echo ($DanmakuDurationCss); ?> ;
+				animation: <?php echo ($DanmakuDurationCss); ?> ;
 				-webkit-animation-play-state: paused;
 				animation-play-state: paused;
 			}
@@ -77,7 +77,7 @@ mkCache(0);
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container">
-			<a class="navbar-brand" href="."><?php include_once 'function.php';echo ($site_name); ?></a>
+			<a class="navbar-brand" href="."><?php echo ($site_name); ?></a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -86,21 +86,21 @@ mkCache(0);
 					<li class="nav-item active">
 						<a class="nav-link" href="./">首页</a>
 					</li>
-					<?php include_once 'function.php';if($_COOKIE["Username"]!=''){echo('<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.$_COOKIE["Username"].'</a><div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink"><a class="dropdown-item" href="./login.php?logout=true">注销登录</a></div></li>');} ?>
+					<?php if($_COOKIE["Username"]!=''){echo('<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.$_COOKIE["Username"].'</a><div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink"><a class="dropdown-item" href="./login.php?logout=true">注销登录</a></div></li>');} ?>
 
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">远程访问</a>
 							<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-							<img class="dropdown-item" src='<?php include_once 'function.php'; if($api_needkey){$key='true';}else{$key='false';};echo('https://wenhairu.com/static/api/qr/?size=300&text={"about":"请使用支持弹弹Play远程访问功能的客户端扫描此二维码","ip":["'.$remote_addres.'"],"port":'.$remote_port.',"machineName":"'.urljsonDecode($site_name).'","currentUser":"'.urljsonDecode($user_name).'","tokenRequired":'.$key.'}');?>' width="300px" hight="300px">
-								<?php include_once 'function.php'; if(!$api_needkey){echo('<a class="dropdown-item" >请使用 弹弹Play概念版 扫描二维码</a>');}else{echo('<a class="dropdown-item" >当前需要密钥,二维码不可用,请手动输入</a><a class="dropdown-item" >IP地址: '.$remote_addres.'</a><a class="dropdown-item" >端口: '.$remote_port.'</a>');}?>
+							<img class="dropdown-item" src='<?php  if($api_needkey){$key='true';}else{$key='false';};echo('https://wenhairu.com/static/api/qr/?size=300&text={"about":"请使用支持弹弹Play远程访问功能的客户端扫描此二维码","ip":["'.$remote_addres.'"],"port":'.$remote_port.',"machineName":"'.urljsonDecode($site_name).'","currentUser":"'.urljsonDecode($user_name).'","tokenRequired":'.$key.'}');?>' width="300px" hight="300px">
+								<?php  if(!$api_needkey){echo('<a class="dropdown-item" >请使用 弹弹Play概念版 扫描二维码</a>');}else{echo('<a class="dropdown-item" >当前需要密钥,二维码不可用,请手动输入</a><a class="dropdown-item" >IP地址: '.$remote_addres.'</a><a class="dropdown-item" >端口: '.$remote_port.'</a>');}?>
 							</div>
 						</li>
 
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">关于</a>
 							<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-								<a class="dropdown-item" href="<?php include_once 'function.php';echo ($About_link); ?>" target="_blank">GitHub</a>
-								<a class="dropdown-item" href="<?php include_once 'function.php';echo ($About_link.'/issues'); ?>" target="_blank">Bug反馈</a>
+								<a class="dropdown-item" href="<?php echo ($About_link); ?>" target="_blank">GitHub</a>
+								<a class="dropdown-item" href="<?php echo ($About_link.'/issues'); ?>" target="_blank">Bug反馈</a>
 								<a class="dropdown-item" href="https://github.com/kaedei/dandanplay-libraryindex" target="_blank">帮助改进此页面</a>
 							</div>
 						</li>
@@ -125,10 +125,10 @@ mkCache(0);
 					<a href="./">首页</a>
 				</li>
 				<li class="breadcrumb-item">
-					<a href="./index.php?animeName=<?php include_once 'function.php';echo (removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['animeTitle'])); ?>"><?php include_once 'function.php';echo (removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['animeTitle'])); ?></a>
+					<a href="./index.php?animeName=<?php echo (removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['animeTitle'])); ?>"><?php echo (removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['animeTitle'])); ?></a>
 				</li>
 				<li class="breadcrumb-item active" aria-current="page">
-				<?php include_once 'function.php';echo (removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['episodeTitle'])); ?>
+				<?php echo (removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['episodeTitle'])); ?>
 				</li>
 			</ol>
 		</nav>
@@ -138,7 +138,7 @@ mkCache(0);
 			<div class="card-header">剧集列表</div>
 			<div class="card-body">
 				<div class="list-group list-group-flush">
-				<?php include_once 'function.php';mkListFromMD5($_GET['video']); ?>
+				<?php mkListFromMD5($_GET['video']); ?>
 				</div>
 			</div>
 		</div>
@@ -148,7 +148,7 @@ mkCache(0);
 	<div class="container">
 		<div class="row text-center">
 			<div class="col-12">
-				<p><?php include_once 'function.php';echo ($site_name); ?>  | Base on 弹弹PlayAPI</p>
+				<p><?php echo ($site_name); ?>  | Base on 弹弹PlayAPI</p>
 			</div>
 		</div>
 	</div>
@@ -170,12 +170,12 @@ mkCache(0);
 				volume: 1, //默认音量
 				mutex: true, //互斥，阻止多个播放器同时播放
 				video: {
-					url: '<?php include_once 'function.php';echo (getVideoFileFromMD5($_GET['video'])); ?>',
-					pic: '<?php include_once 'function.php';echo (getVideoPicFromMD5($_GET['video'])); ?>',
+					url: '<?php echo (getVideoFileFromMD5($_GET['video'])); ?>',
+					pic: '<?php echo (getVideoPicFromMD5($_GET['video'])); ?>',
 					type: 'auto'
 				},
 				danmaku: {
-					id: '<?php include_once 'function.php';echo ($_GET['video']); ?>', //弹幕库id
+					id: '<?php echo ($_GET['video']); ?>', //弹幕库id
 					api: './function.php?action=getCommentFromMD5&md5=', //弹幕库api
 					bottom: '15%', //底部距离
 					unlimited: false, //无限制
@@ -195,4 +195,4 @@ mkCache(0);
 	</script>
 </body>
 </html>
-<?php include_once 'function.php';mkCache(1); ?>
+<?php mkCache(1); ?>
