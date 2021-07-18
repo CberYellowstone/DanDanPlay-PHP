@@ -406,6 +406,9 @@ function getCommentFromMD5($md5){
     $comment_text = rtrim($comment_text, ",");
     $comment_text = $comment_text."]}";
     $comment_text = str_replace(array("\r\n", "\r", "\n", "	"), "", $comment_text);
+    if($GLOBALS['convert_trad_to_simpl']){
+        $comment_text = HanziConvert::convert($comment_text);
+    }
     header('Content-Type:application/json; charset=utf-8');
     echo $comment_text = is_utf8($comment_text) ? $comment_text : filterUtf8($comment_text);
 }
@@ -533,7 +536,9 @@ switch($_GET['action']){
         @header("Location: ./");
         break;
     default:
-        sendStatusCode(403,"Forbidden");
+        if(!defined('IN_SYS')) {
+            sendStatusCode(403,"Forbidden");
+        }
 }
 
 ?>
