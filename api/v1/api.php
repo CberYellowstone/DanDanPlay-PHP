@@ -120,6 +120,8 @@ switch($_GET['action']){
     case "comment":
         sendCommentFromMD5($_GET['id']);
         break;
+    case "gettest":
+        break;    
     case "clcache":
         $filename = md5("/api/v1/library");
         $fileabs = dirname(__FILE__,3).'/cache/'.$filename;
