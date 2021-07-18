@@ -3,6 +3,7 @@
 use sqhlib\Hanzi\HanziConvert;
 include_once 'zh-t2s/HanziConvert.php';
 include_once 'config.php';
+error_reporting(0);
 
 function isCil(){
     return preg_match("/cli/i", php_sapi_name()) ? 1 : 0;
@@ -80,7 +81,7 @@ function listRoot($root,$isOutPut=TRUE,$point=''){
                 }
             }
         }
-        if($_GET['animeName'] && $isOutPut) {
+        if(!isCil() && $isOutPut && $_GET['animeName']) {
             $count_point = countFolder($root.'/'.$point)[0];
             echo ("<a href=\"./index.php?animeName=".$point."\" class=\"list-group-item list-group-item-action rounded-0 line-limit-length\"><span class=\"badge badge-primary\">".$count_point."</span> ".$point."</a>");
         }
@@ -107,7 +108,8 @@ function countFolder($folder){
 
 function getFileName($file_path,$IsFolder=FALSE){
     if(!$IsFolder){
-        return (array_slice(explode('.',(end(explode('/',$file_path)))),-2,1))[0];
+        $file_full_name = end(explode('/',rtrim($file_path,'/')));
+        return str_replace(strrchr($file_full_name, "."),"",$file_full_name);
     }
     elseif($IsFolder){
         return end(explode('/',rtrim($file_path,'/')));
@@ -121,9 +123,9 @@ function formatSpace($need_format_str){
 //$video_file,$pic_name均为为完整带路径文件名
 function mkpic($video_file,$video_time,$pic_name,$pic_size,$isFouce=FALSE) {
     $video_file = formatSpace($video_file);
-    $mkpic_command = "/usr/bin/ffmpeg -ss ".$video_time." -i ".$video_file." -y -f mjpeg -t 1 -r 1 -s ".$pic_size." ".$pic_name;
+    $mkpic_command = "/usr/bin/ffmpeg -loglevel quiet -ss ".$video_time." -i ".$video_file." -y -f mjpeg -t 1 -r 1 -s ".$pic_size." ".$pic_name;
     if($GLOBALS['able_webp']){
-        $mkpic_command = "/usr/bin/ffmpeg -ss ".$video_time." -i ".$video_file." -y -f webp -t 1 -r 1 -s ".$pic_size." ".$pic_name;
+        $mkpic_command = "/usr/bin/ffmpeg -loglevel quiet -ss ".$video_time." -i ".$video_file." -y -f webp -t 1 -r 1 -s ".$pic_size." ".$pic_name;
     }
     if(!isExists(dirname($pic_name,1))){
         mkdir(iconv("UTF-8", "GBK", (dirname($pic_name,1))),0777,true); 
@@ -206,7 +208,7 @@ function echoServerInformation(){
 
 function getVideoTime($file_path,$isOutSecond=FALSE){
     $file_path = formatSpace($file_path);
-    $video_time = exec ("ffmpeg -i ".$file_path." 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//");// 总长度
+    $video_time = exec ("ffmpeg -loglevel quiet -i ".$file_path." 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//");// 总长度
     $video_time = explode(':',explode('.',$video_time)[0]);
     $video_time = $video_time[1].":".$video_time[2];
     if($isOutSecond){
@@ -251,7 +253,6 @@ function getVideoInformation($file_path){
         $i = $i + 1;
     }
     return array($post_result,array($episodeId_first,$animeId_first,$animeTitle_first,$episodeTitle_first));
-    return "";
 }
 
 function saveVideoInformationForFolder($get_information_folder,$Force_make=FALSE){
@@ -366,7 +367,40 @@ function downloadCommentForRoot($root,$Force_downlaod=FALSE){
         downloadCommentForFolder($each_in_root_mix);
     }
 }
+function filterUtf8($string){
+    if($string){
+    //先把正常的utf8替换成英文逗号
+    $result = preg_replace('%(
+    [\x09\x0A\x0D\x20-\x7E]
+    | [\xC2-\xDF][\x80-\xBF]
+    | \xE0[\xA0-\xBF][\x80-\xBF]
+    | [\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}
+    | \xED[\x80-\x9F][\x80-\xBF]
+    | \xF0[\x90-\xBF][\x80-\xBF]{2}
+    | [\xF1-\xF3][\x80-\xBF]{3}
+    | \xF4[\x80-\x8F][\x80-\xBF]{2}
+    )%xs',',',$string);
+    //转成字符数字
+    $charArr = explode(',', $result);
+    //过滤空值、重复值以及重新索引排序
+    $findArr = array_values(array_flip(array_flip(array_filter($charArr))));
+    return $findArr ? str_replace($findArr, "", $string) : $string;
+    }
+    return $string;
+}
 
+function is_utf8($string) {
+    return preg_match('%^(?:
+    [\x09\x0A\x0D\x20-\x7E]
+    | [\xC2-\xDF][\x80-\xBF]
+    | \xE0[\xA0-\xBF][\x80-\xBF]
+    | [\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}
+    | \xED[\x80-\x9F][\x80-\xBF]
+    | \xF0[\x90-\xBF][\x80-\xBF]{2}
+    | [\xF1-\xF3][\x80-\xBF]{3}
+    | \xF4[\x80-\x8F][\x80-\xBF]{2}
+    )*$%xs', $string);
+}
 function getCommentFromMD5($md5){
     $video_information_list = readVideoInformationFromMD5($md5)[0];
     $episodeId = $video_information_list['episodeId'];
@@ -388,9 +422,10 @@ function getCommentFromMD5($md5){
     }
     $comment_text = rtrim($comment_text, ",");
     $comment_text = $comment_text."]}";
-    $comment_text = str_replace(array("\r\n", "\r", "\n"), "", $comment_text);
+    $comment_text = str_replace(array("\r\n", "\r", "\n", "	"), "", $comment_text);
     header('Content-Type:application/json; charset=utf-8');
-    echo($comment_text);
+    echo $comment_text = is_utf8($comment_text) ? $comment_text : filterUtf8($comment_text);
+    // echo($comment_text);
 }
 
 function mkList($folder_path,$now_path=""){
