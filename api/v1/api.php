@@ -106,6 +106,7 @@ function sendVideoFileFromMD5($md5){
 
 switch($_GET['action']){
     case "library":
+        header('Content-Type:application/json; charset=utf-8');
         checkAuth($_SERVER['HTTP_AUTHORIZATION'],$api_needkey);
         mkCache(0);
         mkJsonIndexForRoot($GLOBALS['video_root_path']);
