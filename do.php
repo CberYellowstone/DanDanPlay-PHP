@@ -1,4 +1,5 @@
 <?php
+define('IN_SYS', TRUE);
 include_once 'function.php';
 
 if(isCil()){

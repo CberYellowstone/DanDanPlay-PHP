@@ -1,4 +1,6 @@
-<?php include_once 'function.php';
+<?php 
+define('IN_SYS', TRUE);
+include_once 'function.php';
 @header("Cache-Control: no-cache, must-revalidate");
 if($authorization and !checkUserAndPasswordFromCookie($_COOKIE["Username"], $_COOKIE["Auth"])) {
 	sendStatusCode(303, 'See Other', './login.php', 0);

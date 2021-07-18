@@ -1,4 +1,4 @@
-﻿<?php include_once 'function.php';
+﻿<?php define('IN_SYS', TRUE); include_once 'function.php';
 if ($_GET['logout'] == 'true' or !$authorization) {
 	setcookie("Username",'',time()-1);
 	setcookie("Auth",'', time()-1);
