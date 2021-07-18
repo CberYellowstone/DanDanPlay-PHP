@@ -1,5 +1,17 @@
 <?php
 include_once 'function.php';
+
+if(isCil()){
+    echo(date('Y/m/d H:i:s', time()).": 正在生成缩略图...".PHP_EOL);
+    mkpicForRoot($video_root_path);
+    echo(date('Y/m/d H:i:s', time()).": 正在识别番剧...".PHP_EOL);
+    saveVideoInformationForRoot($video_root_path);
+    echo(date('Y/m/d H:i:s', time()).": 正在下载弹幕...".PHP_EOL);
+    downloadCommentForRoot($video_root_path);
+    echo(date('Y/m/d H:i:s', time()).": 任务完成".PHP_EOL);
+    exit();
+}
+
 @header("Cache-Control: no-cache, must-revalidate");
 
 function checkRefer($source=0){
