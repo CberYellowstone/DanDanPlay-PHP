@@ -27,37 +27,44 @@ function mkContainer($str){
 }
 
 function doTask(){
-    if(!$_GET['step']){
-        mkContainer('正在准备执行任务');
-        @header("refresh:1;url=./do.php?step=1");
-    } elseif($_GET['step']==1){
-        checkRefer();
-        mkContainer('正在生成视频缩略图...');
-        @header("refresh:1;url=./do.php?step=1.5");
-    } elseif($_GET['step']==1.5){
-        checkRefer();
-        mkpicForRoot($GLOBALS['video_root_path']);
-        @header("refresh:1;url=./do.php?step=2");
-    } elseif($_GET['step']==2){
-        checkRefer();
-        mkContainer('正在识别番剧...');
-        @header("refresh:1;url=./do.php?step=2.5");
-    } elseif($_GET['step']==2.5){
-        checkRefer();
-        saveVideoInformationForRoot($GLOBALS['video_root_path']);
-        @header("refresh:1;url=./do.php?step=3");
-    } elseif($_GET['step']==3){
-        checkRefer();
-        mkContainer('正在获取弹幕...');
-        @header("refresh:1;url=./do.php?step=3.5");
-    } elseif($_GET['step']==3.5){
-        checkRefer();
-        downloadCommentForRoot($GLOBALS['video_root_path']);
-        @header("refresh:1;url=./do.php?step=4");
-    } elseif($_GET['step']==4){
-        //checkRefer();
-        mkContainer('<a id="cttx">任务完成</a></br></br> <div style="text-align: center"> <a id="jump" href="./do.php" id="cttx">重新执行</a><a>&#12288&#12288</a><a id="jump" href="./" id="cttx">返回主页</a> </div>');
-    } 
+    switch($_GET['step']){
+        case 1:
+            checkRefer();
+            mkContainer('正在生成视频缩略图...');
+            @header("refresh:1;url=./do.php?step=1.5");
+            break;
+        case 1.5:
+            checkRefer();
+            mkpicForRoot($GLOBALS['video_root_path']);
+            @header("refresh:1;url=./do.php?step=2");
+            break;
+        case 2:
+            checkRefer();
+            mkContainer('正在识别番剧...');
+            @header("refresh:1;url=./do.php?step=2.5");
+            break;
+        case 2.5:
+            checkRefer();
+            saveVideoInformationForRoot($GLOBALS['video_root_path']);
+            @header("refresh:1;url=./do.php?step=3");
+            break;
+        case 3:
+            checkRefer();
+            mkContainer('正在获取弹幕...');
+            @header("refresh:1;url=./do.php?step=3.5");
+            break;
+        case 3.5:
+            checkRefer();
+            downloadCommentForRoot($GLOBALS['video_root_path']);
+            @header("refresh:1;url=./do.php?step=4");
+            break;
+        case 4:
+            mkContainer('<a id="cttx">任务完成</a></br></br> <div style="text-align: center"> <a id="jump" href="./do.php" id="cttx">重新执行</a><a>&#12288&#12288</a><a id="jump" href="./" id="cttx">返回主页</a> </div>');
+            break;
+            default:
+            mkContainer('正在准备执行任务');
+            @header("refresh:1;url=./do.php?step=1");
+    }
 }
 ?>
 
