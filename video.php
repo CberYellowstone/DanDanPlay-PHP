@@ -127,7 +127,7 @@ mkCache(0);
 					<a href="./">首页</a>
 				</li>
 				<li class="breadcrumb-item">
-					<a href="./index.php?animeName=<?php echo (removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['animeTitle'])); ?>"><?php echo (removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['animeTitle'])); ?></a>
+					<a href="./index.php?animeName=<?php echo (str_replace(" ","%20",removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['animeTitle']))); ?>"><?php echo (removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['animeTitle'])); ?></a>
 				</li>
 				<li class="breadcrumb-item active" aria-current="page">
 				<?php echo (removeQuote(readVideoInformationFromMD5($_GET['video'])[0]['episodeTitle'])); ?>

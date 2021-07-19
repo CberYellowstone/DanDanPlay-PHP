@@ -76,14 +76,14 @@ function listRoot($root,$isOutPut=TRUE,$point=''){
             $root_list[] = $each_in_root_mix;
             if($isOutPut){
                 if(!$point){//这里写得不好,有点耗资源了,先这样吧,就一点点而已
-                    echo ("<a href=\"./index.php?animeName=".$each_in_root."\" class=\"list-group-item list-group-item-action rounded-0 line-limit-length\"><span class=\"badge badge-primary\">".$each_folder_count."</span> ".$each_in_root."</a>");
-                }
+                    echo ("<a href=\"./index.php?animeName=".str_replace(" ","%20",$each_in_root)."\" class=\"list-group-item list-group-item-action rounded-0 line-limit-length\"><span class=\"badge badge-primary\">".$each_folder_count."</span> ".$each_in_root."</a>");
                 }
             }
         }
+    }
         if(!isCil() && $isOutPut && $_GET['animeName']) {
             $count_point = countFolder($root.'/'.$point)[0];
-            echo ("<a href=\"./index.php?animeName=".$point."\" class=\"list-group-item list-group-item-action rounded-0 line-limit-length\"><span class=\"badge badge-primary\">".$count_point."</span> ".$point."</a>");
+            echo ("<a href=\"./index.php?animeName=".str_replace(" ","%20",$point)."\" class=\"list-group-item list-group-item-action rounded-0 line-limit-length\"><span class=\"badge badge-primary\">".$count_point."</span> ".$point."</a>");
         }
     return $root_list;
     //$root_list内容包含路径
@@ -128,7 +128,9 @@ function mkpic($video_file,$video_time,$pic_name,$pic_size,$isFouce=FALSE) {
         $mkpic_command = "/usr/bin/ffmpeg -loglevel quiet -ss ".$video_time." -i ".$video_file." -y -f webp -t 1 -r 1 -s ".$pic_size." ".$pic_name;
     }
     if(!isExists(dirname($pic_name,1))){
-        mkdir(iconv("UTF-8", "GBK", (dirname($pic_name,1))),0777,true); 
+        $path = iconv("UTF-8", "GBK", (dirname($pic_name,1)));
+        mkdir($path,0755,true);
+        chown($path,"apache");
     }       
     if(!isExists($pic_name) or $isFouce){
         system($mkpic_command);
@@ -142,7 +144,9 @@ function mkpicForFolder($mkpic_folder,$isFouce=FALSE){
     foreach((countFolder($mkpic_folder))[1] as $mkpic_video){
         $video_name = md5(getFileName($mkpic_video));
         if(!isExists($save_path."/".$folder_name."/".$video_name)){
-            mkdir(iconv("UTF-8", "GBK", ($save_path."/".$folder_name."/".$video_name)),0777,true); 
+            $path = iconv("UTF-8", "GBK", ($save_path."/".$folder_name."/".$video_name));
+            mkdir($path,0755,true);
+            chown($path,"apache");    
         }       
         if($GLOBALS['able_webp']){
             mkpic($mkpic_video,289,($save_path."/".$folder_name."/".$video_name."/".$video_name.".webp"),'400*225',$isFouce);
@@ -203,7 +207,7 @@ function echoServerInformation(){
 
 function getVideoTime($file_path,$isOutSecond=FALSE){
     $file_path = formatShell($file_path);
-    $video_time = exec ("ffmpeg -loglevel quiet -i ".$file_path." 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//");// 总长度
+    $video_time = exec ("ffmpeg -i ".$file_path." 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//");// 总长度
     $video_time = explode(':',explode('.',$video_time)[0]);
     $video_time = $video_time[1].":".$video_time[2];
     if($isOutSecond){
@@ -280,7 +284,9 @@ function saveVideoInformation($file_path,$Force_make=FALSE){
         $video_information_list_named = array('episodeId' => $video_information_list[0], 'animeId' => $video_information_list[1], 'animeTitle' => $video_information_list[2], 'episodeTitle' => $video_information_list[3], 'file_path' => $file_path);
         $video_information_json = json_encode($video_information_list_named,JSON_UNESCAPED_UNICODE);
         if(!isExists($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name)){
-            mkdir(iconv("UTF-8", "GBK", ($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name)),0777,true); 
+            $path = iconv("UTF-8", "GBK", ($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name));
+            mkdir($path,0777,true);
+            chown($path,"apache");    
         }   
         file_put_contents($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$file_name.'.json', $video_information_json);    
     }
@@ -347,7 +353,7 @@ function downloadComment($file_path,$Force_downlaod=FALSE){
     $folder_name = md5(getFileName(getFileName(dirname($file_path,1),TRUE)));
     $file_name = md5(getFileName($file_path));
     if(!isExists($GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$episodeId.'.json') or $Force_downlaod){
-        exec("wget -O ".$GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$episodeId.'.json'." https://api.acplay.net/api/v2/comment/".$episodeId."?withRelated=true");
+        exec("wget -q -O ".$GLOBALS['data_path'].'/'.$folder_name.'/'.$file_name.'/'.$episodeId.'.json'." https://api.acplay.net/api/v2/comment/".$episodeId."?withRelated=true");
     }
 }
 
