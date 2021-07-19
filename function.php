@@ -116,13 +116,13 @@ function getFileName($file_path,$IsFolder=FALSE){
     }
 }
 
-function formatSpace($need_format_str){
-    return str_replace(" ","\ ",$need_format_str);
+function formatShell($need_format_str){
+    return str_replace([" ","`",'"'],["\ ","\`",'\"'],$need_format_str);
 }
 
 //$video_file,$pic_name均为为完整带路径文件名
 function mkpic($video_file,$video_time,$pic_name,$pic_size,$isFouce=FALSE) {
-    $video_file = formatSpace($video_file);
+    $video_file = formatShell($video_file);
     $mkpic_command = "/usr/bin/ffmpeg -loglevel quiet -ss ".$video_time." -i ".$video_file." -y -f mjpeg -t 1 -r 1 -s ".$pic_size." ".$pic_name;
     if($GLOBALS['able_webp']){
         $mkpic_command = "/usr/bin/ffmpeg -loglevel quiet -ss ".$video_time." -i ".$video_file." -y -f webp -t 1 -r 1 -s ".$pic_size." ".$pic_name;
@@ -202,7 +202,7 @@ function echoServerInformation(){
 }
 
 function getVideoTime($file_path,$isOutSecond=FALSE){
-    $file_path = formatSpace($file_path);
+    $file_path = formatShell($file_path);
     $video_time = exec ("ffmpeg -loglevel quiet -i ".$file_path." 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//");// 总长度
     $video_time = explode(':',explode('.',$video_time)[0]);
     $video_time = $video_time[1].":".$video_time[2];
@@ -222,7 +222,7 @@ function getVideoInformation($file_path){
     $file_size = filesize($file_path);
     $video_duration = getVideoTime($file_path,TRUE)[0];
     $match_mode = 'hashAndFileName';
-    $post_result = exec("curl -X POST --header 'Content-Type: text/xml' --header 'Accept: text/json' -d '<?xml version=\"1.0\"?> <MatchRequest> <fileName>".$file_name."</fileName> <fileHash>".$file_hash."</fileHash> <fileSize>".$file_size."</fileSize> <videoDuration>".$video_duration."</videoDuration> <matchMode>".$match_mode."</matchMode> </MatchRequest>' 'https://api.acplay.net/api/v2/match'");
+    $post_result = exec("curl -s -X POST --header 'Content-Type: text/xml' --header 'Accept: text/json' -d '<?xml version=\"1.0\"?> <MatchRequest> <fileName>".$file_name."</fileName> <fileHash>".$file_hash."</fileHash> <fileSize>".$file_size."</fileSize> <videoDuration>".$video_duration."</videoDuration> <matchMode>".$match_mode."</matchMode> </MatchRequest>' 'https://api.acplay.net/api/v2/match'");
     preg_match_all('/\"episodeId\":(.*?),/', $post_result, $episodeId_matches);
     $episodeId_list = $episodeId_matches[1];
     $episodeId_first = $episodeId_list[0];
