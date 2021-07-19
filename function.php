@@ -130,7 +130,7 @@ function mkpic($video_file,$video_time,$pic_name,$pic_size,$isFouce=FALSE) {
     if(!isExists(dirname($pic_name,1))){
         mkdir(iconv("UTF-8", "GBK", (dirname($pic_name,1))),0777,true); 
     }       
-    if(!isExists($pic_name or $isFouce)){
+    if(!isExists($pic_name) or $isFouce){
         system($mkpic_command);
     }
 }
@@ -222,7 +222,19 @@ function getVideoInformation($file_path){
     $file_size = filesize($file_path);
     $video_duration = getVideoTime($file_path,TRUE)[0];
     $match_mode = 'hashAndFileName';
+    $n = 0;
+    while(1){
     $post_result = exec("curl -s -X POST --header 'Content-Type: text/xml' --header 'Accept: text/json' -d '<?xml version=\"1.0\"?> <MatchRequest> <fileName>".$file_name."</fileName> <fileHash>".$file_hash."</fileHash> <fileSize>".$file_size."</fileSize> <videoDuration>".$video_duration."</videoDuration> <matchMode>".$match_mode."</matchMode> </MatchRequest>' 'https://api.acplay.net/api/v2/match'");
+    $n++;
+    if(strpos($post_result,'matches') !== false){
+        break;
+    } else {
+        print("于 ".$animeTitleFromDirName." 发生了一次网络错误".PHP_EOL);
+        if($n>5){
+            print("重试 ".$animeTitleFromDirName." 次数大于5次，请手动处理：".PHP_EOL);
+        }
+        continue;
+    }}
     preg_match_all('/\"episodeId\":(.*?),/', $post_result, $episodeId_matches);
     $episodeId_list = $episodeId_matches[1];
     $episodeId_first = $episodeId_list[0];
