@@ -1,4 +1,5 @@
 <?php 
+$start_time=microtime(true);
 define('IN_SYS', TRUE);
 include_once 'function.php';
 @header("Cache-Control: no-cache, must-revalidate");
@@ -119,7 +120,7 @@ mkCache(0);
 		<div class=" col-md-9 col-xs-12 float-left transform">
 		<?php mkCardForRoot($video_root_path,$_GET['animeName'],$_POST['q']);?>
 			<div class="col-12 float-right text-center pt-5">
-				<p><?php echo ($site_name." | Base on 弹弹PlayAPI.</br>");echoServerInformation()?></p>
+				<p><?php echo ($site_name." | Base on 弹弹PlayAPI.</br>");echoServerInformation(microtime(true)-$start_time)?></p>
 				<p></p>
 			</div>
 		</div>
