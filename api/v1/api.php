@@ -117,6 +117,7 @@ switch($_GET['action']){
         break;
     case "stream":
         sendVideoFileFromMD5($_GET['id']);
+        saveLastTime($_GET['id']);
         break;
     case "comment":
         sendCommentFromMD5($_GET['id']);
