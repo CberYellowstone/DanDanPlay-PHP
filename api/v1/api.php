@@ -64,6 +64,7 @@ function mkJsonIndexForFolder($folder_path){
         $video_path = $video_information_list['file_path'];
         $video_parent_path_md5 = md5(getFileName(dirname($video_path),TRUE));
         $video_file_md5 = md5(getFileName($video_path));
+        $video_path = str_replace($GLOBALS['video_root_path'],'','A:'.$video_path);
         $video_path = str_replace('/','\\',$video_path);
         $video_path = str_replace('\\','\\\\',$video_path);
         //$last_time = readLastTime($each_video_path);
@@ -82,16 +83,28 @@ function mkJsonIndexForRoot($root){
     echo ("]");
 }
 
+function showImg($img){
+    $info = getimagesize($img);
+    $imgExt = image_type_to_extension($info[2], false); //获取文件后缀
+    $fun = "imagecreatefrom{$imgExt}";
+    $imgInfo = $fun($img);         //1.由文件或 URL 创建一个新图象。如:imagecreatefrompng ( string $filename )
+    //$mime = $info['mime'];
+    $mime = image_type_to_mime_type(exif_imagetype($img)); //获取图片的 MIME 类型
+    header('Content-Type:'.$mime);
+    $quality = 100;
+    if($imgExt == 'png') $quality = 9;   //输出质量,JPEG格式(0-100),PNG格式(0-9)
+    $getImgInfo = "image{$imgExt}";
+    $getImgInfo($imgInfo, null, $quality); //2.将图像输出到浏览器或文件。如: imagepng ( resource $image )
+    imagedestroy($imgInfo);
+}
 
 function sendVideoPicFromMD5($md5){
     $parent_md5 = explode("-",$md5)[0];
     $video_md5 = explode("-",$md5)[1];
     if($GLOBALS['able_webp']){
-        @ header("Content-Type:image/webp");
-        echo (file_get_contents(($GLOBALS['data_path'].'/'.$parent_md5.'/'.$video_md5.'/'.$video_md5.'.webp')));
+        showImg(($GLOBALS['data_path'].'/'.$parent_md5.'/'.$video_md5.'/'.$video_md5.'.webp'));
     } else {
-        @ header("Content-Type:image/jpeg");
-        echo (file_get_contents(($GLOBALS['data_path'].'/'.$parent_md5.'/'.$video_md5.'/'.$video_md5.'.jpg')));
+        showImg(($GLOBALS['data_path'].'/'.$parent_md5.'/'.$video_md5.'/'.$video_md5.'.jpg'));
     }
 }
 
