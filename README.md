@@ -4,7 +4,7 @@
 
 # DanDanPlay-PHP
 
-基于 PHP 重构的 [弹弹Play远程访问首页](https://github.com/kaedei/dandanplay-libraryindex)（包含 媒体库内容的展示、视频播放、弹幕 以及 远程访问API）
+基于 PHP 实现的 [弹弹Play远程访问首页](https://github.com/kaedei/dandanplay-libraryindex)（包含 媒体库内容的展示、视频播放、弹幕 以及 远程访问API）
 
 ~~新人作品，可能不是很完美，但是在不断改进~~
 
