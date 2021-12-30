@@ -116,13 +116,9 @@ function getFileName($file_path,$IsFolder=FALSE){
     }
 }
 
-function formatShell($need_format_str){
-    return str_replace([" ","`",'"'],["\ ","\`",'\"'],$need_format_str);
-}
-
 //$video_file,$pic_name均为为完整带路径文件名
 function mkpic($video_file,$video_time,$pic_name,$pic_size,$isFouce=FALSE) {
-    $video_file = formatShell($video_file);
+    $video_file = quotemeta($video_file);
     $mkpic_command = "/usr/bin/ffmpeg -loglevel quiet -ss ".$video_time." -i ".$video_file." -y -f mjpeg -t 1 -r 1 -s ".$pic_size." ".$pic_name;
     if($GLOBALS['able_webp']){
         $mkpic_command = "/usr/bin/ffmpeg -loglevel quiet -ss ".$video_time." -i ".$video_file." -y -f webp -t 1 -r 1 -s ".$pic_size." ".$pic_name;
@@ -207,7 +203,7 @@ function echoServerInformation($time=''){
 }
 
 function getVideoTime($file_path,$isOutSecond=FALSE){
-    $file_path = formatShell($file_path);
+    $file_path = quotemeta($file_path);
     $video_time = exec ("ffmpeg -i ".$file_path." 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//");// 总长度
     $video_time = explode(':',explode('.',$video_time)[0]);
     $video_time = $video_time[1].":".$video_time[2];
