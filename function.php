@@ -535,13 +535,13 @@ function clCache($uri){
 }
 
 function checkUserAndPassword($web_username,$web_password){
-    if(array_key_exists($web_username,$GLOBALS['web_users']) and $GLOBALS['web_users'][$web_username]==$web_password){
+    if(isset($GLOBALS['web_users'][$web_username]) and $GLOBALS['web_users'][$web_username]==$web_password){
         return TRUE;
     }
 }
 
 function checkUserAndPasswordFromCookie($cookieWebUserName,$cookieAuth){
-    if(array_key_exists($cookieWebUserName,$GLOBALS['web_users']) and hash('sha256',$GLOBALS['web_users'][$cookieWebUserName])==$cookieAuth){
+    if(isset($GLOBALS['web_users'][$cookieWebUserName]) and hash('sha256',$GLOBALS['web_users'][$cookieWebUserName])==$cookieAuth){
         return TRUE;
     }
 }
