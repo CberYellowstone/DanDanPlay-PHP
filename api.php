@@ -223,7 +223,7 @@ switch($_GET['action']){
         break;    
     case "clcache":
         $filename = md5("/api/v1/library");
-        $fileabs = dirname(__FILE__,3).'/cache/'.$filename;
+        $fileabs = dirname(__FILE__,1).'/cache/'.$filename;
         echo($fileabs);
         unlink($fileabs);
         break;
