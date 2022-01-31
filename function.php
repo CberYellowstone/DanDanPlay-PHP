@@ -106,9 +106,10 @@ function countFolder($folder){
     return array($count_in_folder,$video_list,$video_name_list);
 }
 
-function getFileName($file_path,$IsFolder=FALSE){
+function getFileName($file_path,$IsFolder=FALSE,$withsuffix=FALSE){
     if(!$IsFolder){
         $file_full_name = end(explode('/',rtrim($file_path,'/')));
+        if($withsuffix){return $file_full_name;}
         return str_replace(strrchr($file_full_name, "."),"",$file_full_name);
     }
     elseif($IsFolder){

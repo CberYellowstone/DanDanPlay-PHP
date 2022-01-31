@@ -51,7 +51,7 @@ function mkJsonIndexForFolder($folder_path){
     foreach(countFolder($folder_path)[1] as $each_video_path){
         if($i){echo(",");}else{$i = $i + 1;}
         //$video_pic_link = getVideoPic($each_video_path,TRUE);
-        $video_file_name = str_replace('\\','\\\\',getFileName($each_video_path));
+        $video_file_name = str_replace('\\','\\\\',getFileName($each_video_path,FALSE,TRUE));
         $video_file_size = filesize($each_video_path);
         $video_time = getVideoTime($each_video_path,TRUE)[0];
         $video_information_list = readVideoInformation($each_video_path,TRUE)[0];
@@ -69,7 +69,7 @@ function mkJsonIndexForFolder($folder_path){
         $video_path = str_replace('\\','\\\\',$video_path);
         //$last_time = readLastTime($each_video_path);
         //echo ($video_file_md5."</br>");
-        echo ('{"AnimeId":'.$animeId.',"EpisodeId":'.$episodeId.',"AnimeTitle":"'.$animeTitle.'","EpisodeTitle":"'.$episodeTitle.'","Id":"'.$video_parent_path_md5."-".$video_file_md5.'","Hash":"'.$video_parent_path_md5."-".$video_file_md5.'","Name":"'.$video_file_name.'","Path":"'.$video_path.'","Size":'.$video_file_size.',"Rate":0,"IsStandalone":false,"Created":"2020-10-15T13:03:41.5584929+08:00","LastMatch":"2020-10-15T13:04:29.9537029+08:00","LastPlay":null,"LastThumbnail":"2020-10-15T13:04:29.9761506+08:00","Duration":'.$video_time.'}');
+        echo ('{"AnimeId":'.$animeId.',"EpisodeId":'.$episodeId.',"AnimeTitle":"'.$animeTitle.'","EpisodeTitle":"'.$episodeTitle.'","Id":"'.$video_parent_path_md5."-".$video_file_md5.'","Hash":"'.$video_file_md5.'","Name":"'.$video_file_name.'","Path":"'.$video_path.'","Size":'.$video_file_size.',"Rate":0,"IsStandalone":false,"Created":"2020-10-15T13:03:41.5584929+08:00","LastMatch":"2020-10-15T13:04:29.9537029+08:00","LastPlay":null,"LastThumbnail":"2020-10-15T13:04:29.9761506+08:00","Duration":'.$video_time.'}');
     }
 }
 
