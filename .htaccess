@@ -1,0 +1,21 @@
+RewriteEngine On
+
+RewriteCond %{HTTP:Authorization} ^(.+)$
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+RewriteRule api/v1/welcome api.php?action=welcome
+RewriteRule api/v1/auth api.php?action=auth
+RewriteRule ^api/v1/playerconfig/(.*)$ api.php?action=playerconfig&id=$1
+RewriteRule api/v1/library api.php?action=library
+RewriteRule api/v1/playlist api.php?action=gettest
+RewriteRule api/v1/current/video api.php?action=clcache
+RewriteRule ^api/v1/image/id/(.*)$ api.php?action=image&id=$1
+RewriteRule ^api/v1/stream/id/(.*)$ api.php?action=stream&id=$1
+RewriteRule ^api/v1/image/(.*)$ api.php?action=image&id=$1
+RewriteRule ^api/v1/stream/(.*)$ api.php?action=stream&id=$1
+RewriteRule ^api/v1/comment/(.*)$ api.php?action=comment&id=$1
+
+RewriteCond %{QUERY_STRING}      id=(.*)
+RewriteRule ^api/v1/dplayer/v3/$ api.php?action=comment_json&id=%1
+
+#RewriteRule ^(.*?)$ api.php?func=$1

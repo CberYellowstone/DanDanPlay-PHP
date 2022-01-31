@@ -1,6 +1,6 @@
 <?php
 define('IN_SYS', TRUE);
-include_once '../../function.php';
+include_once 'function.php';
 @header("Cache-Control: no-cache, must-revalidate");
 
 
@@ -108,19 +108,96 @@ function sendVideoPicFromMD5($md5){
     }
 }
 
+function sendVideoFile($filePath){
+    $filename = basename($filePath);
+    header("Content-type: application/octet-stream");
+    // 处理中文文件名
+    $ua = $_SERVER["HTTP_USER_AGENT"];
+    $encoded_filename = rawurlencode($filename);
+    if (preg_match("/MSIE/", $ua)) {
+        header('Content-Disposition: attachment; filename="' . $encoded_filename . '"');
+    } else if (preg_match("/Firefox/", $ua)) {
+        header("Content-Disposition: attachment; filename*=\"utf8''" . $filename . '"');
+    } else {
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+    }
+    // 让 Xsendfile 发送文件
+    header("X-Sendfile: $filePath");
+    
+}
 
 function sendVideoFileFromMD5($md5){
     $video_path = readVideoInformationFromMD5($md5)[0]['file_path'];
-    $video_url = 'http://'.$_SERVER['HTTP_HOST'].'/'.getFileName($GLOBALS['video_root_path'],TRUE).'/'.getFileName(dirname($video_path,1),TRUE).'/'.getFileName($video_path,TRUE);
-    //$video_url = $GLOBALS['video_root_path'].'/'.getFileName(dirname($video_path,1),TRUE).'/'.getFileName($video_path,TRUE);
-    header("Location:$video_url");
+    sendVideoFile($video_path);
 }
 
+function allowCross(){
+    header('Content-Type: text/html;charset=utf-8');
+    header('Access-Control-Allow-Origin:'.$_SERVER["HTTP_ORIGIN"]); // *代表允许任何网址请求
+    header('Access-Control-Allow-Methods:*'); // 允许请求的类型
+    header('Access-Control-Allow-Credentials: true'); // 设置是否允许发送 cookies
+    header('Access-Control-Allow-Headers:*');
+}
 
+function responseOptions(){
+    if($_SERVER["REQUEST_METHOD"] == "OPTIONS"){
+        exit(0);}}
+
+function mkconfFromMD5($md5){
+    $video_information_array = readVideoInformationFromMD5($md5)[0];
+    $video_animeId = $video_information_array['animeId'];
+    $video_episodeId = $video_information_array['episodeId'];
+    $animeTitle = removeQuote($video_information_array['animeTitle']);
+    $episodeTitle = removeQuote($video_information_array['episodeTitle']);
+    $video_path = $video_information_array['file_path'];
+    $video_name = getFileName($video_path);
+    $video_folder_path = dirname($video_path,1);
+    $video_array = array('AnimeId' => (int)$video_animeId, 'EpisodeId' => (int)$video_episodeId, 'AnimeTitle' => $animeTitle, 'EpisodeTitle' => $episodeTitle, 'Id' => $md5, 'Hash' => '', 'Name' => $video_name, 'Path' => $video_path, 'Size' => 0, 'IsStandalone' => FALSE, 'Created' => '', 'LastMatch' => '', 'LastPlay' => null, 'LastThumbnail' => '', 'Duration' => 0);
+    $video_url = '/api/v1/stream/id/'.$md5;
+    $image_url = '/api/v1/image/id/'.$md5;
+    $vtt_url = '/api/v1/subtitle/vtt/id/'.$md5;
+    $color = '#000000';
+    $dmDuration = '9s';
+    $dmSize = '25px';
+
+    // return;
+    $videoFiles_array = array();
+    foreach(countFolder($video_folder_path)[1] as $each_path){
+        $video_name_all = getFileName($each_path,TRUE);
+        $each_episodeTitle = removeQuote(readVideoInformation($each_path)[0]['episodeTitle']);
+        $video_parent_path_md5 = md5(getFileName(dirname($each_path,1),TRUE));
+        $video_file_md5 = md5(getFileName($each_path));
+        $video_id = $video_parent_path_md5."-".$video_file_md5;
+        $isCurrent = ($video_id == $md5 ? TRUE : FALSE);
+        $temp_array = ['id'=>$video_id, 'episodeTitle'=>$each_episodeTitle, 'fileName'=>$video_name_all, 'isCurrent'=>$isCurrent];
+        $videoFiles_array[] = $temp_array;
+    }
+
+    $out_array = array('id'=>$md5, 'video'=>$video_array, 'videoUrl'=>$video_url, 'imageUrl'=>$image_url, 'vttUrl'=>$vtt_url, 'color'=>$color, 'dmDuration'=>$dmDuration, 'dmSize'=>$dmSize, 'dmArea'=>$GLOBALS['DanmakuArea'], 'videoFiles'=>$videoFiles_array);
+    echo(json_encode($out_array));
+
+}
+
+allowCross();
+responseOptions();
 switch($_GET['action']){
+    case "welcome":
+        header('Content-Type:application/json; charset=utf-8');
+        echo(json_encode(array('message'=>"Hello DanDanPlay-PHP!", 'version'=>$GLOBALS['version'], 'time'=>date('Y-m-d H:i:s', time()), 'tokenRequired'=>FALSE)));
+        break;
+    case "auth":
+        $auth_list = json_decode(file_get_contents("php://input"),TRUE);
+        if(isset($auth_list['userName']) && isset($auth_list['password'])){
+            if(checkUserAndPassword($auth_list['userName'],$auth_list['password'])){
+                echo(json_encode(array('id'=>'88888888-4444-4444-4444-121212121212', 'userName'=>$auth_list['userName'], 'token'=>$GLOBALS['api_authkey'], 'error'=>'')));
+            }else{
+                echo(json_encode(array('id'=>'', 'userName'=>'', 'token'=>'', 'error'=>'用户名或密码错误')));
+            }}else{
+            echo(json_encode(array('id'=>'', 'userName'=>'', 'token'=>'', 'error'=>'用户名或密码缺失')));}
+        break;
     case "library":
         header('Content-Type:application/json; charset=utf-8');
-        checkAuth($_SERVER['HTTP_AUTHORIZATION'],$api_needkey);
+        checkAuth($_SERVER['HTTP_AUTHORIZATION'],$authorization);
         mkCache(0);
         mkJsonIndexForRoot($GLOBALS['video_root_path']);
         mkCache(1);
@@ -135,7 +212,14 @@ switch($_GET['action']){
     case "comment":
         sendCommentFromMD5($_GET['id']);
         break;
+    case "playerconfig":
+        mkconfFromMD5($_GET['id']);
+        break;
+    case "comment_json":
+        getCommentFromMD5($_GET['id']);
+        break;    
     case "gettest":
+        // phpinfo();
         break;    
     case "clcache":
         $filename = md5("/api/v1/library");
@@ -143,6 +227,8 @@ switch($_GET['action']){
         echo($fileabs);
         unlink($fileabs);
         break;
+    default:
+        sendStatusCode(403,"Forbidden");
 }
 
 
