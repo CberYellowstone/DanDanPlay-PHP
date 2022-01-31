@@ -74,9 +74,9 @@ PHP版本要求： `PHP 7+` ，支持 `PHP 8.x`，个人部署环境是 `PHP7.4`
 >
 >此处提供 `Apache` 的配置文件：
 >>
->>```XSendFile on```
+>>XSendFile on
 >>
->>```XSendFilePath /path/ddp/video/```
+>>XSendFilePath /path/ddp/video/
 >>
 >
 >P.S. `Nginx`也有同种模块，具体方法请百度
