@@ -2,7 +2,7 @@
 global $video_root_path, $data_path, $version, $web_users, $able_cache, $able_webp, $cache_limit, $api_authkey, $remote_port, $remote_addres, $convert_trad_to_simpl, $DanmakuArea;
 $video_root_path=dirname(__FILE__).'/video';
 $data_path=dirname(__FILE__).'/data';
-$version = "Alpha 0.4.1";
+$version = "Alpha 0.4.2";
 $About_link = "https://github.com/CberYellowstone/DanDanPlay-PHP";
 
 
