@@ -26,5 +26,5 @@ ini_set('date.timezone','Asia/Shanghai'); //时区设置,若出现时间异常�
 
 if(!$remote_addres){$remote_addres = $_SERVER['SERVER_NAME'];}
 if(!$remote_port){$remote_port = $_SERVER["SERVER_PORT"];}
-if($authorization){$web_users['ANONYMOUS'] = 'WJpKk233ctLyIGTWSPtYDrTK5rCBXZft';}
+if(!$authorization){$web_users['ANONYMOUS'] = 'WJpKk233ctLyIGTWSPtYDrTK5rCBXZft';}
 ?>
