@@ -118,7 +118,7 @@ function getFileName($file_path,$IsFolder=FALSE,$withsuffix=FALSE){
 }
 
 function formatShell($need_format_str){
-    return str_replace(" ","\ ",quotemeta($need_format_str));
+    return str_replace([" ","&"],["\ ","\&"],quotemeta($need_format_str));
 }
 
 //$video_file,$pic_name均为为完整带路径文件名
@@ -195,7 +195,10 @@ function getVideoPicFromMD5($md5){
 
 //带路径
 function getFileMD5($file_path){
-    return (hash_file('md5',$file_path));
+    $file = fopen($file_path,"r");
+    $contents = fread($file,16*1024*1024);
+    fclose($file);
+    return (hash('md5',$contents));
 }
 
 function echoServerInformation($time=''){
@@ -224,7 +227,7 @@ function getVideoTime($file_path,$isOutSecond=FALSE){
 
 function getVideoInformation($file_path){
     $animeTitleFromDirName = getFileName(dirname($file_path),TRUE);
-    $file_name = getFileName($file_path);
+    $file_name = str_replace("&","",getFileName($file_path));
     $file_hash = getFileMD5($file_path);
     $file_size = filesize($file_path);
     $video_duration = getVideoTime($file_path,TRUE)[0];
