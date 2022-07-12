@@ -1,3 +1,5 @@
+# 请移至 [DanDanPlay-Python](https://github.com/CberYellowstone/DanDanPlay-Python) (正在重构中)
+
 # 此项目已不建议使用，因 DanDanPlay-Android 现行版本默认自主获取弹幕，建议换用 WebDav，后续重构将只包含API部分
 ## 本项目即将使用 Python 重构
 
